@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E01BCDE5-868D-4198-AFFE-38C2D410666C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BaiduBce</RootNamespace>
+    <AssemblyName>BceSdkDotNet</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net35-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Auth\DefaultBceCredentials.cs" />
+    <Compile Include="Auth\IBceCredentials.cs" />
+    <Compile Include="Auth\BceV1Signer.cs" />
+    <Compile Include="Auth\ISigner.cs" />
+    <Compile Include="Auth\SignOptions.cs" />
+    <Compile Include="BceClientBase.cs" />
+    <Compile Include="BceClientConfiguration.cs" />
+    <Compile Include="BceBaseException.cs" />
+    <Compile Include="BceServiceException.cs" />
+    <Compile Include="BceClientException.cs" />
+    <Compile Include="BceConstants.cs" />
+    <Compile Include="Http\BceHttpClient.cs" />
+    <Compile Include="Internal\InternalRequest.cs" />
+    <Compile Include="DefaultRetryPolicy.cs" />
+    <Compile Include="IRetryPolicy.cs" />
+    <Compile Include="Model\BceRequestBase.cs" />
+    <Compile Include="Model\BceResponseBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Bos\BosClient.cs" />
+    <Compile Include="Services\Bos\Model\ObjectRequestBase.cs" />
+    <Compile Include="Services\Bos\Model\BucketRequestBase.cs" />
+    <Compile Include="Services\Bos\Model\CreateBucketRequest.cs" />
+    <Compile Include="Services\Bos\Model\ListBucketsRequest.cs" />
+    <Compile Include="Services\Bos\Model\CreateBucketResponse.cs" />
+    <Compile Include="Services\Bos\Model\ListBucketsResponse.cs" />
+    <Compile Include="Services\Bos\Model\BucketSummary.cs" />
+    <Compile Include="Services\Bos\Model\User.cs" />
+    <Compile Include="Util\DateUtils.cs" />
+    <Compile Include="Util\HttpUtils.cs" />
+    <Compile Include="Util\Json\Example\Author.cs" />
+    <Compile Include="Util\Json\Example\Book.cs" />
+    <Compile Include="Util\Json\Example\BookMapper.cs" />
+    <Compile Include="Util\Json\Example\DateMapper.cs" />
+    <Compile Include="Util\Json\JsonValueMapper.cs" />
+    <Compile Include="Util\Json\JsonField.cs" />
+    <Compile Include="Util\Json\JsonLexer.cs" />
+    <Compile Include="Util\Json\JsonMapper.cs" />
+    <Compile Include="Util\Json\JsonParseException.cs" />
+    <Compile Include="Util\Json\JsonTokenType.cs" />
+    <Compile Include="Util\JsonUtils.cs" />
+    <Compile Include="Util\Json\Mapper\DeserializationContext.cs" />
+    <Compile Include="Util\Json\Mapper\IJsonValueMapper.cs" />
+    <Compile Include="Util\Json\Mapper\ObjectMapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
