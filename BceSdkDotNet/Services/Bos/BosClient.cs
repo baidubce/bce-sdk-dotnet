@@ -46,14 +46,10 @@ namespace BaiduBce.Services.Bos
                 throw new ArgumentNullException("request should NOT be null.");
             }
 
-            var internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Post, request);
+            var internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Put, request);
             return internalRequest.Config.RetryPolicy.Execute<CreateBucketResponse>(attempt =>
             {
-                var httpWebResponse = this.httpClient.Execute(internalRequest);
-                using (httpWebResponse)
-                {
-                    return new CreateBucketResponse();
-                }
+                return this.httpClient.Execute<CreateBucketResponse>(internalRequest);
             });
         }
 
@@ -67,11 +63,7 @@ namespace BaiduBce.Services.Bos
             var internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Get, request);
             return internalRequest.Config.RetryPolicy.Execute<ListBucketsResponse>(attempt =>
             {
-                var httpWebResponse = this.httpClient.Execute(internalRequest);
-                using (httpWebResponse)
-                {
-                    return new ListBucketsResponse();
-                }
+                return this.httpClient.Execute<ListBucketsResponse>(internalRequest);
             });
         }
 
@@ -93,6 +85,8 @@ namespace BaiduBce.Services.Bos
             internalRequest.Uri = new Uri(
                 HttpUtils.AppendUri(this.ComputeEndpoint(config), UrlPrefix, bucketName, key));
             internalRequest.HttpMethod = httpMethod;
+            internalRequest.Headers[BceConstants.HttpHeaders.BceDate] = DateUtils.formatAlternateIso8601Date(DateTime.Now);
+            internalRequest.Headers[BceConstants.HttpHeaders.Host] = HttpUtils.GenerateHostHeader(internalRequest.Uri);
             return internalRequest;
         }
     }

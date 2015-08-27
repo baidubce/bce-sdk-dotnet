@@ -17,15 +17,26 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 
+using Newtonsoft.Json;
+
 namespace BaiduBce.Util
 {
     public static class JsonUtils
     {
+        private static JsonSerializer serializer = new JsonSerializer()
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            MissingMemberHandling = MissingMemberHandling.Ignore
+        };
 
 
         public static T ToObject<T>(StreamReader input)
         {
-            return JsonMapper<T>.ToObject(input);
+            using (JsonReader jsonReader = new JsonTextReader(input))
+            {
+                return serializer.Deserialize<T>(jsonReader);
+            }
         }
     }
 }

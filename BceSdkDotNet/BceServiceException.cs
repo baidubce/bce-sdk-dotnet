@@ -9,10 +9,11 @@
 // an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-using LitJson;
 using System;
 using System.IO;
 using System.Net;
+
+using BaiduBce.Util;
 
 namespace BaiduBce
 {
@@ -57,8 +58,7 @@ namespace BaiduBce
             var content = response.GetResponseStream();
             if (content != null)
             {
-                var body = new StreamReader(content).ReadToEnd();
-                var errorResponse = JsonMapper.ToObject<BceErrorResponse>(body);
+                var errorResponse = JsonUtils.ToObject<BceErrorResponse>(new StreamReader(content));
                 if (errorResponse.Message != null)
                 {
                     bse = new BceServiceException(errorResponse.Message);

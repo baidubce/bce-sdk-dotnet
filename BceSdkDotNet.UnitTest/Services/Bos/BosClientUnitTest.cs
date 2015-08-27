@@ -55,6 +55,7 @@ namespace BaiduBce.UnitTest.Services.Bos
             [TestMethod]
             public void TestRequestWithInvalidCredential()
             {
+                Assert.Equals(1, 1);
             }
         }
     }

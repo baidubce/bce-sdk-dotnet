@@ -12,9 +12,11 @@
 using System;
 using System.Collections.Generic;
 
+using BaiduBce.Model;
+
 namespace BaiduBce.Services.Bos.Model
 {
-    public class ListBucketsResponse
+    public class ListBucketsResponse : BceResponseBase
     {
         public User Owner { get; set; }
         public List<BucketSummary> Buckets { get; set; }

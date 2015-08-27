@@ -14,8 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
-using LitJson;
-
 using BaiduBce.Auth;
 using BaiduBce.Internal;
 using BaiduBce.Model;
@@ -26,7 +24,22 @@ namespace BaiduBce.Http
 {
     internal class BceHttpClient
     {
-        public HttpWebResponse Execute(InternalRequest request)
+
+        public T Execute<T>(InternalRequest request)
+        {
+            HttpWebResponse httpWebResponse = Execute(request);
+            using (httpWebResponse)
+            {
+                var content = httpWebResponse.GetResponseStream();
+                if (content != null)
+                {
+                    return JsonUtils.ToObject<T>(new StreamReader(content));
+                }
+            }
+            return default(T);
+        }
+
+        private HttpWebResponse Execute(InternalRequest request)
         {
             BceClientConfiguration config = request.Config;
             if (config.Credentials != null)
@@ -107,15 +120,16 @@ namespace BaiduBce.Http
             foreach (KeyValuePair<string, string> entry in request.Headers)
             {
                 string key = entry.Key;
-                if (key == BceConstants.HttpHeaders.ContentLength)
+                if (key.Equals(BceConstants.HttpHeaders.ContentLength, StringComparison.CurrentCultureIgnoreCase))
                 {
                     httpWebRequest.ContentLength = Convert.ToInt64(entry.Value);
                 }
-                else if (key == BceConstants.HttpHeaders.ContentType)
+                else if (key.Equals(BceConstants.HttpHeaders.ContentType, StringComparison.CurrentCultureIgnoreCase))
                 {
                     httpWebRequest.ContentType = entry.Value;
                 }
-                else
+                // can't direct set Host in httpwebrequest
+                else if (!key.Equals(BceConstants.HttpHeaders.Host, StringComparison.CurrentCultureIgnoreCase))
                 {
                     httpWebRequest.Headers[key] = entry.Value;
                 }
