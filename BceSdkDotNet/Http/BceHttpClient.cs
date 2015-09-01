@@ -25,21 +25,7 @@ namespace BaiduBce.Http
     internal class BceHttpClient
     {
 
-        public T Execute<T>(InternalRequest request)
-        {
-            HttpWebResponse httpWebResponse = Execute(request);
-            using (httpWebResponse)
-            {
-                var content = httpWebResponse.GetResponseStream();
-                if (content != null)
-                {
-                    return JsonUtils.ToObject<T>(new StreamReader(content));
-                }
-            }
-            return default(T);
-        }
-
-        private HttpWebResponse Execute(InternalRequest request)
+        public HttpWebResponse Execute(InternalRequest request)
         {
             BceClientConfiguration config = request.Config;
             if (config.Credentials != null)

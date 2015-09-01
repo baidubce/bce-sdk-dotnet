@@ -9,12 +9,23 @@
 // an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-using System;
+using System;  
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace BaiduBce.Model
+namespace BaiduBce.Services.Bos.Model
 {
-    public class BceResponseBase
+    public class ListObjectsResponse : BosResponseBase
     {
-        public String BceRequestId { get; set; }
+        public string BucketName { get; set; }
+        public string NextMarker { get; set; }
+        public bool IsTruncated { get; set; }
+        public string Prefix { get; set; }
+        public string Marker { get; set; }
+        public int MaxKeys { get; set; }
+        public string Delimiter { get; set; }
+        public List<BosObjectSummary> Contents { get; set; }
+        public List<ObjectPrefix> CommonPrefixes { get; set; }
     }
 }

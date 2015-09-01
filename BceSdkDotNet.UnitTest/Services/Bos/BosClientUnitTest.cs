@@ -15,6 +15,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using BaiduBce.Services.Bos;
+using BaiduBce.Services.Bos.Model;
 using BaiduBce.Auth;
 using System.Diagnostics;
 
@@ -40,7 +41,7 @@ namespace BaiduBce.UnitTest.Services.Bos
             [TestInitialize()]
             public void TestInitialize()
             {
-                this.bucketName = BucketPrefix + new Random().Next().ToString("X");
+                this.bucketName = (BucketPrefix + new Random().Next().ToString("X")).ToLower();
                 this.config = new BceClientConfiguration();
                 this.config.Credentials = new DefaultBceCredentials(this.ak, this.sk);
                 this.config.Endpoint = this.endpoint;
@@ -53,9 +54,23 @@ namespace BaiduBce.UnitTest.Services.Bos
         public class CommonTest : Base
         {
             [TestMethod]
+            [ExpectedException(typeof(BceServiceException))]
             public void TestRequestWithInvalidCredential()
             {
-                Assert.Equals(1, 1);
+                this.config.Credentials = new DefaultBceCredentials("test", "test");
+                this.client = new BosClient(this.config);
+                this.client.ListBuckets();
+            }
+        }
+
+        [TestClass]
+        public class BucketTest : Base
+        {
+            [TestMethod]
+            public void TestListBuckets()
+            {
+                var listBucketsResponse = this.client.ListBuckets();
+                Assert.IsTrue(listBucketsResponse.Buckets.Count > 0);
             }
         }
     }

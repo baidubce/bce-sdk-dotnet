@@ -10,11 +10,18 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
 
-namespace BaiduBce.Model
+namespace BaiduBce.Services.Bos.Model
 {
-    public class BceResponseBase
+    public class BosObject
     {
-        public String BceRequestId { get; set; }
+        public string BucketName { get; set; }
+        public string Key { get; set; }
+        public ObjectMetadata ObjectMetadata { get; set; }
+        public Stream ObjectContent { get; set; }
     }
 }

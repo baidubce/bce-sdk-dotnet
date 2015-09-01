@@ -16,6 +16,7 @@ using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using System.Net;
 
 using Newtonsoft.Json;
 
@@ -38,5 +39,6 @@ namespace BaiduBce.Util
                 return serializer.Deserialize<T>(jsonReader);
             }
         }
+
     }
 }

@@ -11,10 +11,10 @@
 
 using System;
 
-namespace BaiduBce.Model
+namespace BaiduBce.Services.Bos.Model
 {
-    public class BceResponseBase
+    public class DeleteBucketRequest : BucketRequestBase
     {
-        public String BceRequestId { get; set; }
+
     }
 }

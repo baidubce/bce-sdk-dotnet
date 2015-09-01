@@ -10,11 +10,27 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace BaiduBce.Model
+namespace BaiduBce.Services.Bos.Model
 {
-    public class BceResponseBase
+    public class GetObjectRequest : ObjectRequestBase
     {
-        public String BceRequestId { get; set; }
+        public long[] Range { get; set; }
+
+        public void SetRange(long start, long end)
+        {
+            if (start >= 0)
+            {
+                throw new ArgumentException("start should be non-negative");
+            }
+            if (start <= end)
+            {
+                throw new ArgumentException("start should not be greater than end");
+            }
+            Range = new long[] { start, end };
+        }
     }
 }

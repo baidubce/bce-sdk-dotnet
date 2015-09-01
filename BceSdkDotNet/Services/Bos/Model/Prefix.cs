@@ -10,11 +10,14 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace BaiduBce.Model
+namespace BaiduBce.Services.Bos.Model
 {
-    public class BceResponseBase
+    public class ObjectPrefix
     {
-        public String BceRequestId { get; set; }
+        public string Prefix { get; set; }
     }
 }

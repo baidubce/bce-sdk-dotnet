@@ -10,8 +10,12 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
+using System.Net;
+using System.IO;
 
 using BaiduBce.Http;
+using BaiduBce.Util;
+using BaiduBce.Model;
 
 namespace BaiduBce
 {
@@ -39,6 +43,30 @@ namespace BaiduBce
             string protocol = config.Protocol ?? BceConstants.Protocol.Http;
             string region = config.Region ?? BceConstants.Region.Beijing;
             return string.Format(this.serviceEndpointFormat, protocol, region);
+        }
+
+        protected virtual T ToObject<T>(HttpWebResponse httpWebResponse) where T : BceResponseBase, new()
+        {
+            var content = httpWebResponse.GetResponseStream();
+            if (content != null)
+            {
+                T bceResponse = JsonUtils.ToObject<T>(new StreamReader(content));
+                if (bceResponse == null)
+                {
+                    bceResponse = new T();
+                }
+                bceResponse.BceRequestId = httpWebResponse.Headers[BceConstants.HttpHeaders.BceRequestId];
+                return bceResponse;
+            }
+            return default(T);
+        }
+
+        protected void CheckNotNull(Object obj,String message)
+        {
+            if (obj == null)
+            {
+                throw new ArgumentNullException(message);
+            }
         }
     }
 }

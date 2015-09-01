@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -63,6 +64,16 @@
     <Compile Include="Model\BceResponseBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Bos\BosClient.cs" />
+    <Compile Include="Services\Bos\Model\BosObject.cs" />
+    <Compile Include="Services\Bos\Model\BosObjectSummary.cs" />
+    <Compile Include="Services\Bos\Model\BosResponseBase.cs" />
+    <Compile Include="Services\Bos\Model\DeleteBucketResponse.cs" />
+    <Compile Include="Services\Bos\Model\DeleteBucketRequest.cs" />
+    <Compile Include="Services\Bos\Model\GetObjectRequest.cs" />
+    <Compile Include="Services\Bos\Model\GetObjectResponse.cs" />
+    <Compile Include="Services\Bos\Model\ListObjectsRequest.cs" />
+    <Compile Include="Services\Bos\Model\ListObjectsResponse.cs" />
+    <Compile Include="Services\Bos\Model\ObjectMetadata.cs" />
     <Compile Include="Services\Bos\Model\ObjectRequestBase.cs" />
     <Compile Include="Services\Bos\Model\BucketRequestBase.cs" />
     <Compile Include="Services\Bos\Model\CreateBucketRequest.cs" />
@@ -70,9 +81,14 @@
     <Compile Include="Services\Bos\Model\CreateBucketResponse.cs" />
     <Compile Include="Services\Bos\Model\ListBucketsResponse.cs" />
     <Compile Include="Services\Bos\Model\BucketSummary.cs" />
+    <Compile Include="Services\Bos\Model\Prefix.cs" />
+    <Compile Include="Services\Bos\Model\PutObjectRequest.cs" />
+    <Compile Include="Services\Bos\Model\PutObjectResponse.cs" />
     <Compile Include="Services\Bos\Model\User.cs" />
     <Compile Include="Util\DateUtils.cs" />
+    <Compile Include="Util\HashUtils.cs" />
     <Compile Include="Util\HttpUtils.cs" />
+    <Compile Include="Util\IOUtils.cs" />
     <Compile Include="Util\Json\Example\Author.cs" />
     <Compile Include="Util\Json\Example\Book.cs" />
     <Compile Include="Util\Json\Example\BookMapper.cs" />

@@ -11,10 +11,12 @@
 
 using System;
 
-namespace BaiduBce.Model
+using BaiduBce.Model;
+
+namespace BaiduBce.Services.Bos.Model
 {
-    public class BceResponseBase
+    public class BosResponseBase : BceResponseBase
     {
-        public String BceRequestId { get; set; }
+        public string BosDebugId { get; set; }
     }
 }

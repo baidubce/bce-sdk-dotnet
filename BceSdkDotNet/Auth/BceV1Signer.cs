@@ -77,7 +77,7 @@ namespace BaiduBce.Auth
 
             string authString =
                 BceAuthVersion + "/" + accessKeyId + "/"
-                + DateUtils.formatAlternateIso8601Date(timestamp) + "/" + options.ExpirationInSeconds;
+                + DateUtils.FormatAlternateIso8601Date(timestamp) + "/" + options.ExpirationInSeconds;
 
             string signingKey = BceV1Signer.Sha256Hex(secretAccessKey, authString);
             // Formatting the URL with signing protocol.

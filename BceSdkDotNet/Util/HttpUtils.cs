@@ -127,12 +127,12 @@ namespace BaiduBce.Util
             for (int i = 0; i < pathComponents.Length; ++i)
             {
                 string path = pathComponents[i];
-                if (i < pathComponents.Length - 1)
-                {
-                    path = path.TrimEnd('/');
-                }
                 if (!string.IsNullOrEmpty(path))
                 {
+                    if (i < pathComponents.Length - 1)
+                    {
+                        path = path.TrimEnd('/');
+                    }
                     if (!path.StartsWith("/"))
                     {
                         builder.Append('/');
