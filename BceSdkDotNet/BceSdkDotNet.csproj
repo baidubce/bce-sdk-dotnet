@@ -103,8 +103,10 @@
     <Compile Include="Util\Json\Mapper\DeserializationContext.cs" />
     <Compile Include="Util\Json\Mapper\IJsonValueMapper.cs" />
     <Compile Include="Util\Json\Mapper\ObjectMapper.cs" />
+    <Compile Include="Util\MimeTypes.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="mime.types" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

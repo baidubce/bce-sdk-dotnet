@@ -259,8 +259,7 @@ namespace BaiduBce.Services.Bos
 
                 if (metadata.ContentType == null)
                 {
-                    //TODO: get contenttype
-                    metadata.ContentType = "Content-Type";
+                    metadata.ContentType = MimeTypes.GetMimetype(fileInfo);
                 }
                 internalRequest.Content = fileInfo.OpenRead();
                 metadata.BceContentSha256 = HashUtils.computeSHA256Hash(fileInfo);

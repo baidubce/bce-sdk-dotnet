@@ -11,13 +11,15 @@
 
 using System;
 using System.Text;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using BaiduBce.Services.Bos;
 using BaiduBce.Services.Bos.Model;
 using BaiduBce.Auth;
-using System.Diagnostics;
+using BaiduBce.Util;
 
 namespace BaiduBce.UnitTest.Services.Bos
 {
@@ -48,6 +50,34 @@ namespace BaiduBce.UnitTest.Services.Bos
                 this.client = new BosClient(this.config);
                 this.client.CreateBucket(this.bucketName);
             }
+
+            [TestCleanup()]
+            public void TestCleanup()
+            {
+                this.client = new BosClient(this.config);
+                List<BucketSummary> buckets = this.client.ListBuckets().Buckets;
+                if (buckets == null || buckets.Count == 0)
+                {
+                    return;
+                }
+                foreach (BucketSummary bucket in buckets)
+                {
+                    string bucketName = bucket.Name;
+                    if (bucketName.StartsWith("ut"))
+                    {
+                        List<BosObjectSummary> objects = this.client.ListObjects(bucketName).Contents;
+                        if (objects != null && objects.Count > 0)
+                        {
+                            foreach (BosObjectSummary bosObject in objects)
+                            {
+                                String key = bosObject.Key;
+                                this.client.DeleteObject(bucketName, key);
+                            }
+                        }
+                        this.client.DeleteBucket(bucket.Name);
+                    }
+                }
+            }
         }
 
         [TestClass]
@@ -57,9 +87,19 @@ namespace BaiduBce.UnitTest.Services.Bos
             [ExpectedException(typeof(BceServiceException))]
             public void TestRequestWithInvalidCredential()
             {
-                this.config.Credentials = new DefaultBceCredentials("test", "test");
-                this.client = new BosClient(this.config);
+                BceClientConfiguration bceClientConfiguration = new BceClientConfiguration();
+                bceClientConfiguration.Credentials = new DefaultBceCredentials("test", "test");
+                bceClientConfiguration.Endpoint = this.endpoint;
+                this.client = new BosClient(bceClientConfiguration);
                 this.client.ListBuckets();
+            }
+
+            [TestMethod]
+            public void TestMimetypes()
+            {
+                Assert.AreEqual(MimeTypes.GetMimetype("png"), "image/png");
+                Assert.AreEqual(MimeTypes.GetMimetype("gram"), "application/srgs");
+                Assert.AreEqual(MimeTypes.GetMimetype(""), MimeTypes.MimeTypeOctetStream);
             }
         }
 

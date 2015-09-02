@@ -17,7 +17,7 @@ using System.IO;
 
 namespace BaiduBce.Util
 {
-    public class IOUtils
+    internal static class IOUtils
     {
         public const int DefaultBufferSize = 8192;
 

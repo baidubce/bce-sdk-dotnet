@@ -19,7 +19,7 @@ using System.Security.Cryptography;
 
 namespace BaiduBce.Util
 {
-    public class HashUtils
+    internal static class HashUtils
     {
 
         public static String computeSHA256Hash(FileInfo fileInfo)

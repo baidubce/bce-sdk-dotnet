@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace BaiduBce.Util
 {
-    public static class JsonUtils
+    internal static class JsonUtils
     {
         private static JsonSerializer serializer = new JsonSerializer()
         {
