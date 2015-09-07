@@ -12,13 +12,13 @@ namespace BaiduBce.Util
     {
         public const string MimeTypeOctetStream = "application/octet-stream";
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(MimeTypes));
+        private static readonly ILog log = LogManager.GetLogger(typeof (MimeTypes));
 
         private static IDictionary<string, string> extensionToMimetypeMap = new Dictionary<string, string>();
 
         static MimeTypes()
         {
-            Stream stream = typeof(MimeTypes).Assembly.GetManifestResourceStream("BaiduBce.mime.types");
+            Stream stream = typeof (MimeTypes).Assembly.GetManifestResourceStream("BaiduBce.mime.types");
             if (stream != null)
             {
                 using (stream)
@@ -43,7 +43,7 @@ namespace BaiduBce.Util
                 {
                     continue;
                 }
-                string[] lines = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length > 1)
                 {
                     string mimetype = lines[0];
@@ -76,7 +76,12 @@ namespace BaiduBce.Util
 
         public static string GetMimetype(FileInfo fileInfo)
         {
-            return GetMimetype(fileInfo.Extension);
+            string extension = fileInfo.Extension;
+            if (!string.IsNullOrEmpty(extension))
+            {
+                extension = extension.TrimStart('.');
+            }
+            return GetMimetype(extension);
         }
     }
 }
