@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using BaiduBce.Http;
 
 namespace BaiduBce.Util
 {
-    internal static class HttpUtils
+    public static class HttpUtils
     {
         private static readonly string[] PercentEncodedStrings =
             Enumerable.Range(0, 256).Select(v => "%" + v.ToString("X2")).ToArray();

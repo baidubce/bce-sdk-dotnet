@@ -10,12 +10,9 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using System.Text;
-using System.Diagnostics;
 using System.Collections.Generic;
-
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using BaiduBce.Services.Bos;
 using BaiduBce.Services.Bos.Model;
 using BaiduBce.Auth;
@@ -84,7 +81,7 @@ namespace BaiduBce.UnitTest.Services.Bos
         public class CommonTest : Base
         {
             [TestMethod]
-            [ExpectedException(typeof(BceServiceException))]
+            [ExpectedException(typeof (BceServiceException))]
             public void TestRequestWithInvalidCredential()
             {
                 BceClientConfiguration bceClientConfiguration = new BceClientConfiguration();
@@ -111,6 +108,29 @@ namespace BaiduBce.UnitTest.Services.Bos
             {
                 var listBucketsResponse = this.client.ListBuckets();
                 Assert.IsTrue(listBucketsResponse.Buckets.Count > 0);
+            }
+        }
+
+        [TestClass]
+        public class PutObjectTest : Base
+        {
+            [TestMethod]
+            public void TestOrdinary()
+            {
+                string path = "put_object_ordinary.txt";
+                File.WriteAllText(path, "data");
+                FileInfo fileInfo = new FileInfo(path);
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = "test",
+                    FileInfo = fileInfo
+                };
+                String eTag = this.client.PutObject(request).ETAG;
+                Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(fileInfo));
+                String content = System.Text.Encoding.Default.GetString(this.client.GetObjectContent
+                    (this.bucketName, "test"));
+                Assert.AreEqual(content, "data");
             }
         }
     }

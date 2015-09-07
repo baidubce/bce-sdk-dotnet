@@ -111,7 +111,6 @@ namespace BaiduBce
 
         public static class HttpStatusCode
         {
-
             // --- 1xx Informational ---
 
             /** <tt>100 Continue</tt> (HTTP/1.1 - RFC 2616) */
@@ -263,6 +262,5 @@ namespace BaiduBce
             public const string RequestExpired = "RequestExpired";
             public const string SignatureDoesNotMatch = "SignatureDoesNotMatch";
         }
-
     }
 }

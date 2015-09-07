@@ -17,12 +17,11 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Net;
-
 using Newtonsoft.Json;
 
 namespace BaiduBce.Util
 {
-    internal static class JsonUtils
+    public static class JsonUtils
     {
         private static JsonSerializer serializer = new JsonSerializer()
         {
@@ -39,6 +38,5 @@ namespace BaiduBce.Util
                 return serializer.Deserialize<T>(jsonReader);
             }
         }
-
     }
 }

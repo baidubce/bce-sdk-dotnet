@@ -12,7 +12,6 @@
 using System;
 using System.Net;
 using System.IO;
-
 using BaiduBce.Http;
 using BaiduBce.Util;
 using BaiduBce.Model;
@@ -61,7 +60,7 @@ namespace BaiduBce
             return default(T);
         }
 
-        protected void CheckNotNull(Object obj,String message)
+        protected void CheckNotNull(Object obj, String message)
         {
             if (obj == null)
             {

@@ -15,9 +15,7 @@ using System.Net;
 using System.IO;
 using System.Web;
 using System.Text;
-
 using log4net;
-
 using BaiduBce.Internal;
 using BaiduBce.Services.Bos.Model;
 using BaiduBce.Model;
@@ -30,7 +28,7 @@ namespace BaiduBce.Services.Bos
         private const string UrlPrefix = "/v1";
         private const string serviceEndpointFormat = "%s://%s.bcebos.com";
 
-        ILog logger = LogManager.GetLogger(typeof(BosClient));
+        private ILog logger = LogManager.GetLogger(typeof (BosClient));
 
         public BosClient()
             : this(new BceClientConfiguration())
@@ -44,7 +42,7 @@ namespace BaiduBce.Services.Bos
 
         public CreateBucketResponse CreateBucket(string bucketName)
         {
-            return this.CreateBucket(new CreateBucketRequest() { BucketName = bucketName });
+            return this.CreateBucket(new CreateBucketRequest() {BucketName = bucketName});
         }
 
         public CreateBucketResponse CreateBucket(CreateBucketRequest request)
@@ -84,7 +82,7 @@ namespace BaiduBce.Services.Bos
 
         public void DeleteBucket(String bucketName)
         {
-            this.DeleteBucket(new DeleteBucketRequest() { BucketName = bucketName });
+            this.DeleteBucket(new DeleteBucketRequest() {BucketName = bucketName});
         }
 
         public void DeleteBucket(DeleteBucketRequest request)
@@ -104,12 +102,12 @@ namespace BaiduBce.Services.Bos
 
         public ListObjectsResponse ListObjects(String bucketName)
         {
-            return this.ListObjects(new ListObjectsRequest() { BucketName = bucketName });
+            return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName});
         }
 
         public ListObjectsResponse ListObjects(String bucketName, String prefix)
         {
-            return this.ListObjects(new ListObjectsRequest() { BucketName = bucketName, Prefix = prefix });
+            return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName, Prefix = prefix});
         }
 
         public ListObjectsResponse ListObjects(ListObjectsRequest request)
@@ -135,26 +133,26 @@ namespace BaiduBce.Services.Bos
             }
 
             return internalRequest.Config.RetryPolicy.Execute<ListObjectsResponse>(attempt =>
+            {
+                var httpWebResponse = this.httpClient.Execute(internalRequest);
+                using (httpWebResponse)
                 {
-                    var httpWebResponse = this.httpClient.Execute(internalRequest);
-                    using (httpWebResponse)
+                    ListObjectsResponse listObjectsResponse = ToObject<ListObjectsResponse>(httpWebResponse);
+                    if (listObjectsResponse != null)
                     {
-                        ListObjectsResponse listObjectsResponse = ToObject<ListObjectsResponse>(httpWebResponse);
-                        if (listObjectsResponse != null)
+                        listObjectsResponse.BucketName = request.BucketName;
+                        List<BosObjectSummary> contents = listObjectsResponse.Contents;
+                        if (contents != null && contents.Count > 0)
                         {
-                            listObjectsResponse.BucketName = request.BucketName;
-                            List<BosObjectSummary> contents = listObjectsResponse.Contents;
-                            if (contents != null && contents.Count > 0)
+                            foreach (BosObjectSummary summary in contents)
                             {
-                                foreach (BosObjectSummary summary in contents)
-                                {
-                                    summary.BucketName = request.BucketName;
-                                }
+                                summary.BucketName = request.BucketName;
                             }
                         }
-                        return listObjectsResponse;
                     }
-                });
+                    return listObjectsResponse;
+                }
+            });
         }
 
         public ListObjectsResponse ListNextBatchOfObjects(ListObjectsResponse previousResponse)
@@ -185,12 +183,18 @@ namespace BaiduBce.Services.Bos
 
         public PutObjectResponse PutObject(String bucketName, String key, FileInfo fileInfo)
         {
-            return this.PutObject(new PutObjectRequest() { BucketName = bucketName, Key = key, FileInfo = fileInfo });
+            return this.PutObject(new PutObjectRequest() {BucketName = bucketName, Key = key, FileInfo = fileInfo});
         }
 
         public PutObjectResponse PutObject(String bucketName, String key, FileInfo fileInfo, ObjectMetadata metadata)
         {
-            return this.PutObject(new PutObjectRequest() { BucketName = bucketName, Key = key, FileInfo = fileInfo, ObjectMetadata = metadata });
+            return this.PutObject(new PutObjectRequest()
+            {
+                BucketName = bucketName,
+                Key = key,
+                FileInfo = fileInfo,
+                ObjectMetadata = metadata
+            });
         }
 
         public PutObjectResponse PutObject(String bucketName, String key, String value)
@@ -214,7 +218,13 @@ namespace BaiduBce.Services.Bos
             {
                 metadata.ContentLength = value.Length;
             }
-            return this.PutObject(new PutObjectRequest() { BucketName = bucketName, Key = key, Stream = new MemoryStream(value), ObjectMetadata = metadata });
+            return this.PutObject(new PutObjectRequest()
+            {
+                BucketName = bucketName,
+                Key = key,
+                Stream = new MemoryStream(value),
+                ObjectMetadata = metadata
+            });
         }
 
         public PutObjectResponse PutObject(String bucketName, String key, Stream input)
@@ -224,7 +234,13 @@ namespace BaiduBce.Services.Bos
 
         public PutObjectResponse PutObject(String bucketName, String key, Stream input, ObjectMetadata metadata)
         {
-            return this.PutObject(new PutObjectRequest() { BucketName = bucketName, Key = key, Stream = input, ObjectMetadata = metadata });
+            return this.PutObject(new PutObjectRequest()
+            {
+                BucketName = bucketName,
+                Key = key,
+                Stream = input,
+                ObjectMetadata = metadata
+            });
         }
 
         public PutObjectResponse PutObject(PutObjectRequest request)
@@ -262,7 +278,7 @@ namespace BaiduBce.Services.Bos
                     metadata.ContentType = MimeTypes.GetMimetype(fileInfo);
                 }
                 internalRequest.Content = fileInfo.OpenRead();
-                metadata.BceContentSha256 = HashUtils.computeSHA256Hash(fileInfo);
+                metadata.ContentMd5 = HashUtils.ComputeMD5HashWithBase64(fileInfo);
             }
             else
             {
@@ -271,7 +287,6 @@ namespace BaiduBce.Services.Bos
                 {
                     logger.Warn("No content length specified for stream data.");
                     metadata.ContentLength = input.Length;
-
                 }
                 internalRequest.Content = input;
             }
@@ -287,7 +302,8 @@ namespace BaiduBce.Services.Bos
                     using (httpWebResponse)
                     {
                         PutObjectResponse putObjectResponse = ToObject<PutObjectResponse>(httpWebResponse);
-                        putObjectResponse.ETAG = httpWebResponse.Headers[BceConstants.HttpHeaders.ETag];
+                        putObjectResponse.ETAG =
+                            httpWebResponse.Headers[BceConstants.HttpHeaders.ETag].Replace("\"", "");
                         return putObjectResponse;
                     }
                 });
@@ -296,17 +312,17 @@ namespace BaiduBce.Services.Bos
 
         public BosObject GetObject(String bucketName, String key)
         {
-            return this.GetObject(new GetObjectRequest() { BucketName = bucketName, Key = key });
+            return this.GetObject(new GetObjectRequest() {BucketName = bucketName, Key = key});
         }
 
         public ObjectMetadata GetObject(String bucketName, String key, FileInfo destinationFile)
         {
-            return this.GetObject(new GetObjectRequest() { BucketName = bucketName, Key = key }, destinationFile);
+            return this.GetObject(new GetObjectRequest() {BucketName = bucketName, Key = key}, destinationFile);
         }
 
         public byte[] GetObjectContent(String bucketName, String key)
         {
-            return this.GetObjectContent(new GetObjectRequest() { BucketName = bucketName, Key = key });
+            return this.GetObjectContent(new GetObjectRequest() {BucketName = bucketName, Key = key});
         }
 
         public byte[] GetObjectContent(GetObjectRequest request)
@@ -320,7 +336,10 @@ namespace BaiduBce.Services.Bos
                 var httpWebResponse = this.httpClient.Execute(internalRequest);
                 using (httpWebResponse)
                 {
-                    return IOUtils.StreamToBytes(httpWebResponse.GetResponseStream(), (int)config.SocketBufferSizeInBytes);
+                    return IOUtils.StreamToBytes(
+                        httpWebResponse.GetResponseStream(),
+                        httpWebResponse.ContentLength,
+                        (int) config.SocketBufferSizeInBytes);
                 }
             });
         }
@@ -358,7 +377,10 @@ namespace BaiduBce.Services.Bos
                 var httpWebResponse = this.httpClient.Execute(internalRequest);
                 using (httpWebResponse)
                 {
-                    IOUtils.StreamToFile(httpWebResponse.GetResponseStream(), destinationFileInfo, (int)config.SocketBufferSizeInBytes);
+                    IOUtils.StreamToFile(
+                        httpWebResponse.GetResponseStream(),
+                        destinationFileInfo,
+                        (int) config.SocketBufferSizeInBytes);
                     return GetObjectMetadata(httpWebResponse);
                 }
             });
@@ -366,7 +388,7 @@ namespace BaiduBce.Services.Bos
 
         public ObjectMetadata GetObjectMetadata(String bucketName, String key)
         {
-            return this.GetObjectMetadata(new ObjectRequestBase() { BucketName = bucketName, Key = key });
+            return this.GetObjectMetadata(new ObjectRequestBase() {BucketName = bucketName, Key = key});
         }
 
         public ObjectMetadata GetObjectMetadata(ObjectRequestBase request)
@@ -386,7 +408,7 @@ namespace BaiduBce.Services.Bos
 
         public void DeleteObject(String bucketName, String key)
         {
-            this.DeleteObject(new ObjectRequestBase() { BucketName = bucketName, Key = key });
+            this.DeleteObject(new ObjectRequestBase() {BucketName = bucketName, Key = key});
         }
 
         public void DeleteObject(ObjectRequestBase request)
@@ -409,7 +431,8 @@ namespace BaiduBce.Services.Bos
             T response = base.ToObject<T>(httpWebResponse);
             if (response is BosResponseBase)
             {
-                (response as BosResponseBase).BosDebugId = httpWebResponse.Headers[BceConstants.HttpHeaders.BosDebugId];
+                (response as BosResponseBase).BosDebugId =
+                    httpWebResponse.Headers[BceConstants.HttpHeaders.BosDebugId];
             }
             return response;
         }
@@ -420,15 +443,18 @@ namespace BaiduBce.Services.Bos
         {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             long contentLength;
-            if (long.TryParse(httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentLength), out contentLength))
+            if (long.TryParse(httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentLength),
+                out contentLength))
             {
                 objectMetadata.ContentLength = contentLength;
             }
 
             objectMetadata.ContentType = httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentType);
-            objectMetadata.ContentEncoding = httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentEncoding);
+            objectMetadata.ContentEncoding =
+                httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentEncoding);
             objectMetadata.ContentMd5 = httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentMd5);
-            objectMetadata.ContentDisposition = httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentDisposition);
+            objectMetadata.ContentDisposition =
+                httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ContentDisposition);
             String eTag = httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.ETag);
             if (eTag != null)
             {
@@ -447,18 +473,23 @@ namespace BaiduBce.Services.Bos
                     }
                     catch (FormatException e)
                     {
-                        logger.Warn("Fail to parse length from " + BceConstants.HttpHeaders.ContentRange + ": " + contentRange, e);
+                        logger.Warn(
+                            "Fail to parse length from " + BceConstants.HttpHeaders.ContentRange + ": " + contentRange,
+                            e);
                     }
                 }
             }
-            objectMetadata.LastModified = DateUtils.ParseRfc822Date(httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.LastModified));
-            objectMetadata.BceContentSha256 = httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.BceContentSha256);
+            objectMetadata.LastModified =
+                DateUtils.ParseRfc822Date(httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.LastModified));
+            objectMetadata.BceContentSha256 =
+                httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.BceContentSha256);
             foreach (String header in httpWebResponse.Headers.AllKeys)
             {
                 if (header.StartsWith(BceConstants.HttpHeaders.BceUserMetadataPrefix))
                 {
                     string key = header.Substring(BceConstants.HttpHeaders.BceUserMetadataPrefix.Length);
-                    objectMetadata.UserMetadata[HttpUtility.HtmlDecode(key)] = HttpUtility.HtmlDecode(httpWebResponse.GetResponseHeader(header));
+                    objectMetadata.UserMetadata[HttpUtility.HtmlDecode(key)] =
+                        HttpUtility.HtmlDecode(httpWebResponse.GetResponseHeader(header));
                 }
             }
             return objectMetadata;
@@ -510,8 +541,9 @@ namespace BaiduBce.Services.Bos
                     {
                         throw new BceClientException("MetadataTooLarge");
                     }
-                    request.Headers[BceConstants.HttpHeaders.BceUserMetadataPrefix + HttpUtils.Normalize(key.Trim())] =
-                            HttpUtils.Normalize(value);
+                    string userMetaKey = BceConstants.HttpHeaders.BceUserMetadataPrefix +
+                                         HttpUtils.Normalize(key.Trim());
+                    request.Headers[userMetaKey] = HttpUtils.Normalize(value);
                 }
             }
         }
@@ -534,7 +566,8 @@ namespace BaiduBce.Services.Bos
             internalRequest.Uri = new Uri(
                 HttpUtils.AppendUri(this.ComputeEndpoint(config), UrlPrefix, bucketName, key));
             internalRequest.HttpMethod = httpMethod;
-            internalRequest.Headers[BceConstants.HttpHeaders.BceDate] = DateUtils.FormatAlternateIso8601Date(DateTime.Now);
+            internalRequest.Headers[BceConstants.HttpHeaders.BceDate] =
+                DateUtils.FormatAlternateIso8601Date(DateTime.Now);
             internalRequest.Headers[BceConstants.HttpHeaders.Host] = HttpUtils.GenerateHostHeader(internalRequest.Uri);
             return internalRequest;
         }
@@ -549,7 +582,6 @@ namespace BaiduBce.Services.Bos
             }
             return internalRequest;
         }
-
 
         #endregion
     }

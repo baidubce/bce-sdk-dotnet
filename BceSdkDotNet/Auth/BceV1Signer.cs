@@ -14,9 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
-
 using log4net;
-
 using BaiduBce.Internal;
 using BaiduBce.Http;
 using BaiduBce.Util;
@@ -26,7 +24,7 @@ namespace BaiduBce.Auth
 {
     public class BceV1Signer : ISigner
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(BceV1Signer));
+        private static readonly ILog log = LogManager.GetLogger(typeof (BceV1Signer));
 
         private const string BceAuthVersion = "bce-auth-v1";
 
@@ -35,13 +33,13 @@ namespace BaiduBce.Auth
 
         static BceV1Signer()
         {
-            defaultHeadersToSign.Add(HttpRequestHeader.Host.ToString().ToLower());
-            defaultHeadersToSign.Add(HttpRequestHeader.ContentLength.ToString().ToLower());
-            defaultHeadersToSign.Add(HttpRequestHeader.ContentType.ToString().ToLower());
-            defaultHeadersToSign.Add(HttpRequestHeader.ContentMd5.ToString().ToLower());
+            defaultHeadersToSign.Add(BceConstants.HttpHeaders.Host.ToLower());
+            defaultHeadersToSign.Add(BceConstants.HttpHeaders.ContentLength.ToLower());
+            defaultHeadersToSign.Add(BceConstants.HttpHeaders.ContentType.ToLower());
+            defaultHeadersToSign.Add(BceConstants.HttpHeaders.ContentMd5.ToLower());
         }
 
-        public string sign(InternalRequest request)
+        public string Sign(InternalRequest request)
         {
             if (request == null)
             {
@@ -86,7 +84,7 @@ namespace BaiduBce.Auth
             string canonicalQueryString = HttpUtils.GetCanonicalQueryString(request.Parameters, true);
             // Sorted the headers should be signed from the request.
             SortedDictionary<string, string> headersToSign =
-                    BceV1Signer.GetHeadersToSign(request.Headers, options.HeadersToSign);
+                BceV1Signer.GetHeadersToSign(request.Headers, options.HeadersToSign);
             // Formatting the headers from the request based on signing protocol.
             string canonicalHeader = BceV1Signer.GetCanonicalHeaders(headersToSign);
             string signedHeaders = "";
@@ -96,7 +94,7 @@ namespace BaiduBce.Auth
             }
 
             string canonicalRequest =
-                    request.HttpMethod + "\n" + canonicalURI + "\n" + canonicalQueryString + "\n" + canonicalHeader;
+                request.HttpMethod + "\n" + canonicalURI + "\n" + canonicalQueryString + "\n" + canonicalHeader;
 
             // Signing the canonical request using key with sha-256 algorithm.
             string signature = BceV1Signer.Sha256Hex(signingKey, canonicalRequest);
@@ -187,7 +185,8 @@ namespace BaiduBce.Auth
         private static bool IsDefaultHeaderToSign(string header)
         {
             header = header.Trim().ToLower();
-            return header.StartsWith(BceConstants.HttpHeaders.BcePrefix) || BceV1Signer.defaultHeadersToSign.Contains(header);
+            return header.StartsWith(BceConstants.HttpHeaders.BcePrefix) ||
+                   BceV1Signer.defaultHeadersToSign.Contains(header);
         }
 
         private static string Sha256Hex(string signingKey, string stringToSign)

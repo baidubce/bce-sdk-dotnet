@@ -4,9 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using Microsoft.Win32;
-
 using BaiduBce.Auth;
 using System.Net;
 
@@ -188,7 +186,7 @@ namespace BaiduBce
             }
             return ret;
         }
-        
+
         internal static BceClientConfiguration CreateWithDefaultValues()
         {
             var config = new BceClientConfiguration();

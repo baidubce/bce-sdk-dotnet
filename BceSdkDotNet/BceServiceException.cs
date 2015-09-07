@@ -12,7 +12,6 @@
 using System;
 using System.IO;
 using System.Net;
-
 using BaiduBce.Util;
 
 namespace BaiduBce
@@ -24,7 +23,7 @@ namespace BaiduBce
             get
             {
                 return this.ErrorMessage + " (Status Code: " + this.StatusCode + "; Error Code: "
-                    + this.ErrorCode + "; Request ID: " + this.RequestId + ")";
+                       + this.ErrorCode + "; Request ID: " + this.RequestId + ")";
             }
         }
 
@@ -71,7 +70,7 @@ namespace BaiduBce
                 bse = new BceServiceException(response.StatusDescription);
                 bse.RequestId = response.Headers[BceConstants.HttpHeaders.BceRequestId];
             }
-            bse.StatusCode = (int)response.StatusCode;
+            bse.StatusCode = (int) response.StatusCode;
             return bse;
         }
 

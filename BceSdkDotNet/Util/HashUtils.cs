@@ -19,10 +19,9 @@ using System.Security.Cryptography;
 
 namespace BaiduBce.Util
 {
-    internal static class HashUtils
+    public static class HashUtils
     {
-
-        public static String computeSHA256Hash(FileInfo fileInfo)
+        public static String ComputeSHA256Hash(FileInfo fileInfo)
         {
             using (Stream stream = fileInfo.OpenRead())
             {
@@ -33,13 +32,24 @@ namespace BaiduBce.Util
             }
         }
 
-        public static String computeMD5Hash(FileInfo fileInfo)
+        public static String ComputeMD5Hash(FileInfo fileInfo)
         {
             using (var md5 = MD5.Create())
             {
                 using (var stream = fileInfo.OpenRead())
                 {
                     return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                }
+            }
+        }
+
+        public static String ComputeMD5HashWithBase64(FileInfo fileInfo)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = fileInfo.OpenRead())
+                {
+                    return Convert.ToBase64String(md5.ComputeHash(stream));
                 }
             }
         }

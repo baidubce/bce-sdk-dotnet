@@ -15,7 +15,7 @@ using System.Text;
 
 namespace BaiduBce.Util.Json
 {
-    class JsonLexer
+    internal class JsonLexer
     {
         private StreamReader input;
 
@@ -102,7 +102,7 @@ namespace BaiduBce.Util.Json
         {
             StringBuilder builder = new StringBuilder(128);
             builder.Append('"');
-            for (; ; )
+            for (;;)
             {
                 int nextChar = this.ReadNextChar();
                 builder.Append(nextChar);
@@ -119,7 +119,6 @@ namespace BaiduBce.Util.Json
                     builder.Append(this.ReadEscapedChar());
                 }
             }
-
         }
 
         public char ReadEscapedChar()
@@ -174,12 +173,12 @@ namespace BaiduBce.Util.Json
                     throw new JsonParseException("Malformed Json: Invalid escpaed unicode sequence.");
                 }
             }
-            return (char)value;
+            return (char) value;
         }
 
         public void ReadNumber(StringBuilder builder)
         {
-            for (; ; )
+            for (;;)
             {
                 int nextChar = this.ReadNextChar();
                 if (nextChar == '.' || nextChar == 'e' || nextChar == 'E')
@@ -214,7 +213,7 @@ namespace BaiduBce.Util.Json
             if (nextChar == '+' || nextChar == '-' || nextChar >= '0' && nextChar <= '9')
             {
                 builder.Append(nextChar);
-                for (; ; )
+                for (;;)
                 {
                     nextChar = this.ReadNextChar();
                     if (nextChar < '0' || nextChar > '9')
@@ -279,7 +278,7 @@ namespace BaiduBce.Util.Json
             }
             else
             {
-                for (; ; )
+                for (;;)
                 {
                     ret = this.input.Read();
                     if (ret != '\n' && ret != '\r')

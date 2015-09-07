@@ -17,7 +17,7 @@ using System.IO;
 
 namespace BaiduBce.Util
 {
-    internal static class IOUtils
+    public static class IOUtils
     {
         public const int DefaultBufferSize = 8192;
 
@@ -40,16 +40,18 @@ namespace BaiduBce.Util
 
         public static byte[] StreamToBytes(Stream sourceStream)
         {
-            return StreamToBytes(sourceStream, DefaultBufferSize);
+            return StreamToBytes(sourceStream, sourceStream.Length, DefaultBufferSize);
         }
 
-        public static byte[] StreamToBytes(Stream sourceStream, int bufferSize)
+        public static byte[] StreamToBytes(Stream sourceStream, long streamLength, int bufferSize)
         {
-            var result = new byte[sourceStream.Length];
+            var result = new byte[streamLength];
+            var buffer = new byte[bufferSize];
             int totalBytesRead = 0;
             int bytesRead = 0;
-            while ((bytesRead = sourceStream.Read(result, totalBytesRead, bufferSize)) > 0)
+            while ((bytesRead = sourceStream.Read(buffer, 0, bufferSize)) > 0)
             {
+                Array.Copy(buffer, 0, result, totalBytesRead, bytesRead);
                 totalBytesRead += bytesRead;
             }
             return result;

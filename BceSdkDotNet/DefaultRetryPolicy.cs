@@ -12,16 +12,14 @@
 using System;
 using System.IO;
 using System.Net;
-
 using log4net;
-
 using BaiduBce.Model;
 
 namespace BaiduBce
 {
     public class DefaultRetryPolicy : IRetryPolicy
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(DefaultRetryPolicy));
+        private static readonly ILog log = LogManager.GetLogger(typeof (DefaultRetryPolicy));
 
         public const int DefaultMaxErrorRetry = 3;
 
@@ -45,7 +43,7 @@ namespace BaiduBce
         public T Execute<T>(Func<int, T> func)
         {
             long delayForNextRetryInMillis = 0;
-            for (int attempt = 1; ; ++attempt)
+            for (int attempt = 1;; ++attempt)
             {
                 try
                 {

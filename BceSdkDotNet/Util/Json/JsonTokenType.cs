@@ -11,10 +11,19 @@
 
 namespace BaiduBce.Util.Json
 {
-    enum JsonTokenType
+    internal enum JsonTokenType
     {
-        String, Long, Double, Bool, Null,
-        OpeningBrace, ClosingBrace, Comma, Colon, OpeningBracket, ClosingBracket,
+        String,
+        Long,
+        Double,
+        Bool,
+        Null,
+        OpeningBrace,
+        ClosingBrace,
+        Comma,
+        Colon,
+        OpeningBracket,
+        ClosingBracket,
         End
     }
 }

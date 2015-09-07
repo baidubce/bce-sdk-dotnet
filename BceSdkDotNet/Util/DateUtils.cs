@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace BaiduBce.Util
 {
-    internal static class DateUtils
+    public static class DateUtils
     {
         private static string rfc822DateFormat = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
 
@@ -18,7 +18,8 @@ namespace BaiduBce.Util
         public static DateTime ParseRfc822Date(String dateString)
         {
             DateTime dateTime;
-            DateTime.TryParseExact(dateString, rfc822DateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AssumeUniversal, out dateTime);
+            DateTime.TryParseExact(dateString, rfc822DateFormat, DateTimeFormatInfo.InvariantInfo,
+                DateTimeStyles.AssumeUniversal, out dateTime);
             return dateTime;
         }
     }

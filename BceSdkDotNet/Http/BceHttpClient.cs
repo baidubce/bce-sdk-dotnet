@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-
 using BaiduBce.Auth;
 using BaiduBce.Internal;
 using BaiduBce.Model;
@@ -24,13 +23,12 @@ namespace BaiduBce.Http
 {
     internal class BceHttpClient
     {
-
         public HttpWebResponse Execute(InternalRequest request)
         {
             BceClientConfiguration config = request.Config;
             if (config.Credentials != null)
             {
-                request.Headers[BceConstants.HttpHeaders.Authorization] = config.Signer.sign(request);
+                request.Headers[BceConstants.HttpHeaders.Authorization] = config.Signer.Sign(request);
             }
             HttpWebRequest httpWebRequest = BceHttpClient.CreateHttpWebRequest(request);
             BceHttpClient.PopulateRequestHeaders(request, httpWebRequest);
@@ -39,7 +37,7 @@ namespace BaiduBce.Http
                 using (Stream requestStream = httpWebRequest.GetRequestStream())
                 using (Stream contentStream = request.Content)
                 {
-                    var buffer = new byte[(int)config.SocketBufferSizeInBytes];
+                    var buffer = new byte[(int) config.SocketBufferSizeInBytes];
                     int bytesRead = 0;
                     while ((bytesRead = contentStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
@@ -89,7 +87,7 @@ namespace BaiduBce.Http
             }
             if (config.UseNagleAlgorithm != null)
             {
-                httpWebRequest.ServicePoint.UseNagleAlgorithm = (bool)config.UseNagleAlgorithm;
+                httpWebRequest.ServicePoint.UseNagleAlgorithm = (bool) config.UseNagleAlgorithm;
             }
             httpWebRequest.ServicePoint.MaxIdleTime =
                 config.MaxIdleTimeInMillis ?? BceClientConfiguration.DefaultMaxIdleTimeInMillis;

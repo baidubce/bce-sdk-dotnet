@@ -22,7 +22,7 @@ namespace BaiduBce.Util.Json.Example
         public double Price { get; set; }
 
         [JsonField("date")]
-        [JsonValueMapper(typeof(DateMapper))]
+        [JsonValueMapper(typeof (DateMapper))]
         public DateTime PublishDate { get; set; }
     }
 }

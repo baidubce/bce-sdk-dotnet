@@ -11,13 +11,12 @@
 
 using System;
 using System.Collections.Generic;
-
 using BaiduBce.Internal;
 
 namespace BaiduBce.Auth
 {
     public interface ISigner
     {
-        string sign(InternalRequest request);
+        string Sign(InternalRequest request);
     }
 }

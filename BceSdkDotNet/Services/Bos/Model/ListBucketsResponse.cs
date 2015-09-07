@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-
 using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model

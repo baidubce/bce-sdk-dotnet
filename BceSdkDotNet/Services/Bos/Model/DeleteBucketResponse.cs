@@ -10,13 +10,11 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-
 using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
     public class DeleteBucketResponse : BceResponseBase
     {
-
     }
 }

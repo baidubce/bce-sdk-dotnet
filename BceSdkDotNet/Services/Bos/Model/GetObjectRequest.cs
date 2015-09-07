@@ -30,7 +30,7 @@ namespace BaiduBce.Services.Bos.Model
             {
                 throw new ArgumentException("start should not be greater than end");
             }
-            Range = new long[] { start, end };
+            Range = new long[] {start, end};
         }
     }
 }
