@@ -65,14 +65,13 @@ namespace BaiduBce.Util
             {
                 parentDirectory.Create();
             }
-            using (FileStream fileStream = destinationFileInfo.OpenWrite())
-            using (StreamWriter sw = new StreamWriter(fileStream))
+            using (FileStream fileStream = destinationFileInfo.Create())
             {
                 byte[] buffer = new byte[bufferSize];
                 int bytesRead;
                 while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    sw.Write(buffer);
+                    fileStream.Write(buffer, 0, bytesRead);
                 }
             }
         }

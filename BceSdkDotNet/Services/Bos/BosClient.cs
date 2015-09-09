@@ -310,6 +310,13 @@ namespace BaiduBce.Services.Bos
             }
         }
 
+        /// <summary>
+        /// Gets the object stored in Bos under the specified bucket and key.
+        /// You should close the stream after you call this method
+        /// </summary>
+        /// <param name="bucketName">The name of the bucket containing the desired object.</param>
+        /// <param name="key">The key under which the desired object is stored.</param>
+        /// <returns>The object stored in Bos in the specified bucket and key.</returns>
         public BosObject GetObject(String bucketName, String key)
         {
             return this.GetObject(new GetObjectRequest() {BucketName = bucketName, Key = key});
@@ -344,6 +351,12 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Gets the object stored in Bos under the specified bucket and key.
+        /// You should close the stream after you call this method
+        /// </summary>
+        /// <param name="request">The request object containing all the options on how to download the object.</param>
+        /// <returns>The object stored in Bos in the specified bucket and key.</returns>
         public BosObject GetObject(GetObjectRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -353,15 +366,12 @@ namespace BaiduBce.Services.Bos
             return internalRequest.Config.RetryPolicy.Execute<BosObject>(attempt =>
             {
                 var httpWebResponse = this.httpClient.Execute(internalRequest);
-                using (httpWebResponse)
-                {
-                    BosObject bosObject = new BosObject();
-                    bosObject.BucketName = request.BucketName;
-                    bosObject.Key = request.Key;
-                    bosObject.ObjectContent = IOUtils.GetMemoryStream(httpWebResponse.GetResponseStream());
-                    bosObject.ObjectMetadata = GetObjectMetadata(httpWebResponse);
-                    return bosObject;
-                }
+                BosObject bosObject = new BosObject();
+                bosObject.BucketName = request.BucketName;
+                bosObject.Key = request.Key;
+                bosObject.ObjectContent = httpWebResponse.GetResponseStream();
+                bosObject.ObjectMetadata = GetObjectMetadata(httpWebResponse);
+                return bosObject;
             });
         }
 
@@ -488,8 +498,8 @@ namespace BaiduBce.Services.Bos
                 if (header.StartsWith(BceConstants.HttpHeaders.BceUserMetadataPrefix))
                 {
                     string key = header.Substring(BceConstants.HttpHeaders.BceUserMetadataPrefix.Length);
-                    objectMetadata.UserMetadata[HttpUtility.HtmlDecode(key)] =
-                        HttpUtility.HtmlDecode(httpWebResponse.GetResponseHeader(header));
+                    objectMetadata.UserMetadata[HttpUtility.UrlDecode(key)] =
+                        HttpUtility.UrlDecode(httpWebResponse.GetResponseHeader(header));
                 }
             }
             return objectMetadata;

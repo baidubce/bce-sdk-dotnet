@@ -35,13 +35,27 @@ namespace BaiduBce.Http
             if (request.Content != null)
             {
                 using (Stream requestStream = httpWebRequest.GetRequestStream())
-                using (Stream contentStream = request.Content)
                 {
                     var buffer = new byte[(int) config.SocketBufferSizeInBytes];
                     int bytesRead = 0;
-                    while ((bytesRead = contentStream.Read(buffer, 0, buffer.Length)) > 0)
+                    int totalBytesRead = 0;
+                    long contentLength = GetContentLengthFromInternalRequest(request);
+                    while ((bytesRead = request.Content.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        requestStream.Write(buffer, 0, bytesRead);
+                        if (contentLength > 0 && (bytesRead + totalBytesRead) >= contentLength)
+                        {
+                            requestStream.Write(buffer, 0, (int) (contentLength - totalBytesRead));
+                            break;
+                        }
+                        else
+                        {
+                            requestStream.Write(buffer, 0, bytesRead);
+                            totalBytesRead += bytesRead;
+                        }
+                    }
+                    if (request.Content.CanSeek)
+                    {
+                        request.Content.Seek(0, SeekOrigin.Begin);
                     }
                 }
             }
@@ -118,6 +132,20 @@ namespace BaiduBce.Http
                     httpWebRequest.Headers[key] = entry.Value;
                 }
             }
+        }
+
+        private static long GetContentLengthFromInternalRequest(InternalRequest request)
+        {
+            string contentLengthString;
+            if (request.Headers.TryGetValue(BceConstants.HttpHeaders.ContentLength, out contentLengthString))
+            {
+                long contentLength;
+                if (long.TryParse(contentLengthString, out contentLength))
+                {
+                    return contentLength;
+                }
+            }
+            return -1;
         }
     }
 }

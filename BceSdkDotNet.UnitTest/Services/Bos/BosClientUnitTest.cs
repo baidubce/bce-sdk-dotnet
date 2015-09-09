@@ -123,14 +123,35 @@ namespace BaiduBce.UnitTest.Services.Bos
                 PutObjectRequest request = new PutObjectRequest()
                 {
                     BucketName = this.bucketName,
-                    Key = "test",
+                    Key = "te%%st",
                     FileInfo = fileInfo
                 };
                 String eTag = this.client.PutObject(request).ETAG;
                 Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(fileInfo));
                 String content = System.Text.Encoding.Default.GetString(this.client.GetObjectContent
-                    (this.bucketName, "test"));
+                    (this.bucketName, "te%%st"));
                 Assert.AreEqual(content, "data");
+                FileInfo outFileInfo = new FileInfo("object_ordinary.txt");
+                this.client.GetObject(this.bucketName, "te%%st", outFileInfo);
+                Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(outFileInfo));
+            }
+
+            [TestMethod]
+            public void TestContentLengthSmallThanStreamLength()
+            {             
+                ObjectMetadata objectMetadata=new ObjectMetadata();
+                objectMetadata.ContentLength = 2;
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = "te%%st",
+                    Stream = new MemoryStream(System.Text.Encoding.Default.GetBytes("data")),
+                    ObjectMetadata = objectMetadata
+                };
+                this.client.PutObject(request);
+                String content = System.Text.Encoding.Default.GetString(this.client.GetObjectContent
+                    (this.bucketName, "te%%st"));
+                Assert.AreEqual(content, "da");
             }
         }
     }

@@ -19,6 +19,7 @@ using BaiduBce.Internal;
 using BaiduBce.Http;
 using BaiduBce.Util;
 using System.Text;
+using System.Web;
 
 namespace BaiduBce.Auth
 {
@@ -79,7 +80,7 @@ namespace BaiduBce.Auth
 
             string signingKey = BceV1Signer.Sha256Hex(secretAccessKey, authString);
             // Formatting the URL with signing protocol.
-            string canonicalURI = BceV1Signer.GetCanonicalURIPath(request.Uri.AbsolutePath);
+            string canonicalURI = BceV1Signer.GetCanonicalURIPath(HttpUtility.UrlDecode(request.Uri.AbsolutePath));
             // Formatting the query string with signing protocol.
             string canonicalQueryString = HttpUtils.GetCanonicalQueryString(request.Parameters, true);
             // Sorted the headers should be signed from the request.
