@@ -22,11 +22,11 @@ namespace BaiduBce.Services.Bos.Model
 
         public void SetRange(long start, long end)
         {
-            if (start >= 0)
+            if (start < 0)
             {
                 throw new ArgumentException("start should be non-negative");
             }
-            if (start <= end)
+            if (start >= end)
             {
                 throw new ArgumentException("start should not be greater than end");
             }

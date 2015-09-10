@@ -288,6 +288,10 @@ namespace BaiduBce.Services.Bos
                     logger.Warn("No content length specified for stream data.");
                     metadata.ContentLength = input.Length;
                 }
+                else if (metadata.ContentLength > input.Length)
+                {
+                    throw new ArgumentNullException("ContentLength should not be greater than stream length");
+                }
                 internalRequest.Content = input;
             }
 

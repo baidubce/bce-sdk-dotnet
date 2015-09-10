@@ -80,7 +80,7 @@ namespace BaiduBce.Http
         {
             BceClientConfiguration config = request.Config;
             IBceCredentials credentials = config.Credentials;
-            string uri = request.Uri.ToString();
+            string uri = request.Uri.AbsoluteUri;
             string encodedParams = HttpUtils.GetCanonicalQueryString(request.Parameters, false);
             if (encodedParams.Length > 0)
             {

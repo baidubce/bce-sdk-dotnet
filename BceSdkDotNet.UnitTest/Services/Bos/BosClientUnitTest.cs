@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BaiduBce.Services.Bos;
 using BaiduBce.Services.Bos.Model;
@@ -62,7 +63,8 @@ namespace BaiduBce.UnitTest.Services.Bos
                     string bucketName = bucket.Name;
                     if (bucketName.StartsWith("ut"))
                     {
-                        List<BosObjectSummary> objects = this.client.ListObjects(bucketName).Contents;
+                        ListObjectsResponse listObjectsResponse = this.client.ListObjects(bucketName);
+                        List<BosObjectSummary> objects = listObjectsResponse.Contents;
                         if (objects != null && objects.Count > 0)
                         {
                             foreach (BosObjectSummary bosObject in objects)
@@ -120,26 +122,27 @@ namespace BaiduBce.UnitTest.Services.Bos
                 string path = "put_object_ordinary.txt";
                 File.WriteAllText(path, "data");
                 FileInfo fileInfo = new FileInfo(path);
+                string key = "te%%st  ";
                 PutObjectRequest request = new PutObjectRequest()
                 {
                     BucketName = this.bucketName,
-                    Key = "te%%st",
+                    Key = key,
                     FileInfo = fileInfo
                 };
                 String eTag = this.client.PutObject(request).ETAG;
                 Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(fileInfo));
                 String content = System.Text.Encoding.Default.GetString(this.client.GetObjectContent
-                    (this.bucketName, "te%%st"));
+                    (this.bucketName, key));
                 Assert.AreEqual(content, "data");
                 FileInfo outFileInfo = new FileInfo("object_ordinary.txt");
-                this.client.GetObject(this.bucketName, "te%%st", outFileInfo);
+                this.client.GetObject(this.bucketName, key, outFileInfo);
                 Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(outFileInfo));
             }
 
             [TestMethod]
             public void TestContentLengthSmallThanStreamLength()
-            {             
-                ObjectMetadata objectMetadata=new ObjectMetadata();
+            {
+                ObjectMetadata objectMetadata = new ObjectMetadata();
                 objectMetadata.ContentLength = 2;
                 PutObjectRequest request = new PutObjectRequest()
                 {
@@ -152,6 +155,32 @@ namespace BaiduBce.UnitTest.Services.Bos
                 String content = System.Text.Encoding.Default.GetString(this.client.GetObjectContent
                     (this.bucketName, "te%%st"));
                 Assert.AreEqual(content, "da");
+            }
+        }
+
+        [TestClass]
+        public class GetObjectTest : Base
+        {
+            [TestMethod]
+            public void TestOrdinary()
+            {
+                string path = "put_object_ordinary.txt";
+                File.WriteAllText(path, "data");
+                FileInfo fileInfo = new FileInfo(path);
+                string key = "te%%st  ";
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo
+                };
+                String eTag = this.client.PutObject(request).ETAG;
+                Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(fileInfo));
+                BosObject bosObject= this.client.GetObject(this.bucketName, key);
+                String content =
+                    Encoding.Default.GetString(IOUtils.StreamToBytes(bosObject.ObjectContent,
+                        bosObject.ObjectMetadata.ContentLength, 8192));
+                Assert.AreEqual(content, "data");
             }
         }
     }
