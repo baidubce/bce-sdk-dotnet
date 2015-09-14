@@ -33,6 +33,8 @@ namespace BaiduBce.Internal
 
         public bool Expect100Continue { get; set; }
 
+        public long[] Range { get; set; }
+
         public InternalRequest()
         {
             Parameters = new Dictionary<string, string>();

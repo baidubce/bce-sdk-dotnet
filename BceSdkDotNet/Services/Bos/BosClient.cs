@@ -117,19 +117,19 @@ namespace BaiduBce.Services.Bos
             InternalRequest internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Get, request);
             if (request.Prefix != null)
             {
-                internalRequest.Headers["prefix"] = request.Prefix;
+                internalRequest.Parameters["prefix"] = request.Prefix;
             }
             if (request.Marker != null)
             {
-                internalRequest.Headers["marker"] = request.Marker;
+                internalRequest.Parameters["marker"] = request.Marker;
             }
             if (request.Delimiter != null)
             {
-                internalRequest.Headers["delimiter"] = request.Delimiter;
+                internalRequest.Parameters["delimiter"] = request.Delimiter;
             }
-            if (request.MaxKeys >= 0)
+            if (request.MaxKeys != null && request.MaxKeys >= 0)
             {
-                internalRequest.Headers["maxKeys"] = request.MaxKeys.ToString();
+                internalRequest.Parameters["maxKeys"] = request.MaxKeys.ToString();
             }
 
             return internalRequest.Config.RetryPolicy.Execute<ListObjectsResponse>(attempt =>
@@ -592,7 +592,8 @@ namespace BaiduBce.Services.Bos
             long[] range = request.Range;
             if (range != null && range.Length == 2)
             {
-                internalRequest.Headers[BceConstants.HttpHeaders.Range] = "bytes=" + range[0] + "-" + range[1];
+                internalRequest.Range = request.Range;
+                //internalRequest.Headers[BceConstants.HttpHeaders.Range] = "bytes=" + range[0] + "-" + range[1];
             }
             return internalRequest;
         }

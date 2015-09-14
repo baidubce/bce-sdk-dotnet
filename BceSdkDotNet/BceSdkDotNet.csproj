@@ -104,6 +104,7 @@
     <Compile Include="Util\Json\Mapper\IJsonValueMapper.cs" />
     <Compile Include="Util\Json\Mapper\ObjectMapper.cs" />
     <Compile Include="Util\MimeTypes.cs" />
+    <Compile Include="Util\WebRequestExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="mime.types" />

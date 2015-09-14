@@ -24,6 +24,6 @@ namespace BaiduBce.Services.Bos.Model
 
         public string Delimiter { get; set; }
 
-        public int MaxKeys { get; set; }
+        public int? MaxKeys { get; set; }
     }
 }

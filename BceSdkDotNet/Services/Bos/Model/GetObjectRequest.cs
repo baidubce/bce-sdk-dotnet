@@ -26,7 +26,7 @@ namespace BaiduBce.Services.Bos.Model
             {
                 throw new ArgumentException("start should be non-negative");
             }
-            if (start >= end)
+            if (start > end)
             {
                 throw new ArgumentException("start should not be greater than end");
             }

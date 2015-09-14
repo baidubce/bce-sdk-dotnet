@@ -176,11 +176,34 @@ namespace BaiduBce.UnitTest.Services.Bos
                 };
                 String eTag = this.client.PutObject(request).ETAG;
                 Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(fileInfo));
-                BosObject bosObject= this.client.GetObject(this.bucketName, key);
+                BosObject bosObject = this.client.GetObject(this.bucketName, key);
                 String content =
                     Encoding.Default.GetString(IOUtils.StreamToBytes(bosObject.ObjectContent,
                         bosObject.ObjectMetadata.ContentLength, 8192));
                 Assert.AreEqual(content, "data");
+            }
+
+            [TestMethod]
+            public void TestGetRange()
+            {
+                string path = "put_object_ordinary.txt";
+                File.WriteAllText(path, "data");
+                FileInfo fileInfo = new FileInfo(path);
+                string key = "te%%st  ";
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo
+                };
+                this.client.PutObject(request);
+                GetObjectRequest getObjectRequest = new GetObjectRequest() {BucketName = this.bucketName, Key = key};
+                getObjectRequest.SetRange(0, 0);
+                BosObject bosObject = this.client.GetObject(getObjectRequest);
+                String content =
+                    Encoding.Default.GetString(IOUtils.StreamToBytes(bosObject.ObjectContent,
+                        bosObject.ObjectMetadata.ContentLength, 8192));
+                Assert.AreEqual(content, "d");
             }
         }
     }

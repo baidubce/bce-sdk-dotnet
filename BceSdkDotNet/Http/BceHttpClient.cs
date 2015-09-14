@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Reflection;
+using System.Threading;
 using BaiduBce.Auth;
 using BaiduBce.Internal;
 using BaiduBce.Model;
@@ -34,7 +36,8 @@ namespace BaiduBce.Http
             BceHttpClient.PopulateRequestHeaders(request, httpWebRequest);
             if (request.Content != null)
             {
-                using (Stream requestStream = httpWebRequest.GetRequestStream())
+                httpWebRequest.AllowWriteStreamBuffering = false;
+                using (Stream requestStream = WebRequestExtension.GetRequestStreamWithTimeout(httpWebRequest))
                 {
                     var buffer = new byte[(int) config.SocketBufferSizeInBytes];
                     int bytesRead = 0;
@@ -61,7 +64,7 @@ namespace BaiduBce.Http
             }
             try
             {
-                return httpWebRequest.GetResponse() as HttpWebResponse;
+                return WebRequestExtension.GetResponseWithTimeout(httpWebRequest) as HttpWebResponse;
             }
             catch (WebException e)
             {
@@ -90,6 +93,10 @@ namespace BaiduBce.Http
             httpWebRequest.Timeout = config.TimeoutInMillis ?? BceClientConfiguration.DefaultTimeoutInMillis;
             httpWebRequest.ReadWriteTimeout =
                 config.ReadWriteTimeoutInMillis ?? BceClientConfiguration.DefaultReadWriteTimeoutInMillis;
+            if (request.Range != null && request.Range.Length == 2)
+            {
+                AddRange(httpWebRequest, request.Range);
+            }
             if (!string.IsNullOrEmpty(config.ProxyHost) && config.ProxyPort.GetValueOrDefault() > 0)
             {
                 WebProxy proxy = new WebProxy(config.ProxyHost, config.ProxyPort.GetValueOrDefault());
@@ -146,6 +153,28 @@ namespace BaiduBce.Http
                 }
             }
             return -1;
+        }
+
+        /// <summary>
+        /// defaulst addRange method only take int32 args, can not work if a file is bigger than 2G
+        /// </summary>
+        /// <param name="httpWebRequest"></param>
+        /// <param name="range"></param>
+        private static void AddRange(HttpWebRequest httpWebRequest, long[] range)
+        {
+            Type t = typeof (HttpWebRequest);
+            object[] args = new object[3];
+            args[0] = "bytes";
+            args[1] = range[0].ToString();
+            args[2] = range[1].ToString();
+            MethodInfo[] mi = t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+            foreach (var methodInfo in mi)
+            {
+                if (methodInfo.Name == "AddRange")
+                {
+                    methodInfo.Invoke(httpWebRequest, args);
+                }
+            }
         }
     }
 }
