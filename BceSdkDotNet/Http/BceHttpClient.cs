@@ -19,12 +19,15 @@ using BaiduBce.Auth;
 using BaiduBce.Internal;
 using BaiduBce.Model;
 using BaiduBce.Util;
+using log4net;
 
 
 namespace BaiduBce.Http
 {
     internal class BceHttpClient
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(BceHttpClient));
+
         public HttpWebResponse Execute(InternalRequest request)
         {
             BceClientConfiguration config = request.Config;
@@ -43,17 +46,29 @@ namespace BaiduBce.Http
                     int bytesRead = 0;
                     int totalBytesRead = 0;
                     long contentLength = GetContentLengthFromInternalRequest(request);
-                    while ((bytesRead = request.Content.Read(buffer, 0, buffer.Length)) > 0)
+                    try
                     {
-                        if (contentLength > 0 && (bytesRead + totalBytesRead) >= contentLength)
+                        while ((bytesRead = request.Content.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            requestStream.Write(buffer, 0, (int) (contentLength - totalBytesRead));
-                            break;
+                            if (contentLength > 0 && (bytesRead + totalBytesRead) >= contentLength)
+                            {
+                                requestStream.Write(buffer, 0, (int) (contentLength - totalBytesRead));
+                                break;
+                            }
+                            else
+                            {
+                                requestStream.Write(buffer, 0, bytesRead);
+                                totalBytesRead += bytesRead;
+                            }
                         }
-                        else
+                    }
+                    catch (NotSupportedException e)
+                    {
+                        //a very strange phenomenon:
+                        //if bos server is down, we will receive a NotSupportedException when execute requestStream.Write(...)
+                        if (log.IsDebugEnabled)
                         {
-                            requestStream.Write(buffer, 0, bytesRead);
-                            totalBytesRead += bytesRead;
+                            log.Debug("error when put data.", e);
                         }
                     }
                     if (request.Content.CanSeek)
@@ -61,6 +76,7 @@ namespace BaiduBce.Http
                         request.Content.Seek(0, SeekOrigin.Begin);
                     }
                 }
+
             }
             try
             {

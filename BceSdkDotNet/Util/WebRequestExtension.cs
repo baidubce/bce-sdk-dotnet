@@ -7,6 +7,9 @@ using System.Text;
 
 namespace BaiduBce.Util
 {
+    /// <summary>
+    /// http://www.thomaslevesque.com/2014/01/14/tackling-timeout-issues-when-uploading-large-files-with-httpwebrequest/
+    /// </summary>
     public static class WebRequestExtension
     {
         public static Stream GetRequestStreamWithTimeout(WebRequest request, int? millisecondsTimeout = null)
