@@ -10,13 +10,15 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using BaiduBce.Model;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace BaiduBce
+namespace BaiduBce.Services.Bos.Model
 {
-    public interface IRetryPolicy
+    public class Grant
     {
-        T Execute<T>(Func<int, T> func);
-        bool CanRetry { get; set; }
+        public List<Grantee> Grantee { get; set; }
+        public List<String> Permission { get; set; }
     }
 }

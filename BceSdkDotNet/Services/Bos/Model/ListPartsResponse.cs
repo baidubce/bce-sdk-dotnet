@@ -10,13 +10,21 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using BaiduBce.Model;
+using System.Collections.Generic;
 
-namespace BaiduBce
+namespace BaiduBce.Services.Bos.Model
 {
-    public interface IRetryPolicy
+    public class ListPartsResponse : BosResponseBase
     {
-        T Execute<T>(Func<int, T> func);
-        bool CanRetry { get; set; }
+        public string BucketName { get; set; }
+        public DateTime Initiated { get; set; }
+        public bool IsTruncated { get; set; }
+        public String Key { get; set; }
+        public int? MaxParts { get; set; }
+        public int NextPartNumberMarker { get; set; }
+        public User Owner { get; set; }
+        public int PartNumberMarker { get; set; }
+        public List<PartSummary> Parts { get; set; }
+        public string UploadId { get; set; }
     }
 }

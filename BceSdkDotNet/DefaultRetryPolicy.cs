@@ -33,11 +33,14 @@ namespace BaiduBce
 
         public int ScaleFactorInMillis { get; set; }
 
+        public bool CanRetry { get; set; }
+
         public DefaultRetryPolicy()
         {
             this.MaxErrorRetry = DefaultMaxErrorRetry;
             this.MaxDelayInMillis = DefaultMaxDelayInMillis;
             this.ScaleFactorInMillis = DefaultScaleFactorInMillis;
+            this.CanRetry = true;
         }
 
         public T Execute<T>(Func<int, T> func)
@@ -60,7 +63,7 @@ namespace BaiduBce
                         e = new BceClientException("Unable to execute request", e);
                     }
                     delayForNextRetryInMillis =
-                        this.getDelayBeforeNextRetryInMillis(e, attempt);
+                        this.GetDelayBeforeNextRetryInMillis(e, attempt);
                     if (delayForNextRetryInMillis < 0)
                     {
                         throw e;
@@ -69,7 +72,7 @@ namespace BaiduBce
             }
         }
 
-        protected virtual int getDelayBeforeNextRetryInMillis(Exception exception, int attempt)
+        protected virtual int GetDelayBeforeNextRetryInMillis(Exception exception, int attempt)
         {
             int retriesAttempted = attempt - 1;
 
@@ -91,6 +94,12 @@ namespace BaiduBce
 
         protected virtual bool ShouldRetry(Exception exception, int retriesAttempted)
         {
+            // Don't retry if stream can not seek.
+            if (!CanRetry)
+            {
+                return false;
+            }
+
             // Always retry on client exceptions caused by WebException which has not been converted to
             // BceServiceException.
             if (exception.InnerException is WebException)

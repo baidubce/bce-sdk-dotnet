@@ -12,11 +12,10 @@
 using System;
 using BaiduBce.Model;
 
-namespace BaiduBce
+namespace BaiduBce.Services.Bos.Model
 {
-    public interface IRetryPolicy
+    public class UploadRequestBase : ObjectRequestBase
     {
-        T Execute<T>(Func<int, T> func);
-        bool CanRetry { get; set; }
+        public string UploadId { get; set; }
     }
 }

@@ -14,7 +14,7 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
-    public class DeleteBucketResponse : BceResponseBase
+    public class DeleteBucketResponse : BosResponseBase
     {
     }
 }

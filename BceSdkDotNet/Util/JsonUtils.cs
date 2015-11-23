@@ -18,6 +18,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Net;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace BaiduBce.Util
 {
@@ -27,9 +28,13 @@ namespace BaiduBce.Util
         {
             NullValueHandling = NullValueHandling.Ignore,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
-            MissingMemberHandling = MissingMemberHandling.Ignore
+            MissingMemberHandling = MissingMemberHandling.Ignore,
         };
 
+        private static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
 
         public static T ToObject<T>(StreamReader input)
         {
@@ -37,6 +42,11 @@ namespace BaiduBce.Util
             {
                 return serializer.Deserialize<T>(jsonReader);
             }
+        }
+
+        public static string SerializeObject(object value)
+        {
+            return JsonConvert.SerializeObject(value, jsonSerializerSettings);
         }
     }
 }

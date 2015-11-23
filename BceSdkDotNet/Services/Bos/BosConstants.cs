@@ -10,13 +10,23 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using BaiduBce.Model;
 
-namespace BaiduBce
+namespace BaiduBce.Services.Bos
 {
-    public interface IRetryPolicy
+    public static class BosConstants
     {
-        T Execute<T>(Func<int, T> func);
-        bool CanRetry { get; set; }
+        public static class Permission
+        {
+            public const string FullControl = "FULL_CONTROL";
+            public const string Read = "READ";
+            public const string Write = "WRITE";
+        }
+
+        public static class CannedAcl
+        {
+            public const string Private = "private";
+            public const string PublicRead = "public-read";
+            public const string PublicReadWrite = "public-read-write";
+        }
     }
 }

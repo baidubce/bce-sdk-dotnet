@@ -35,8 +35,8 @@ namespace BaiduBce.Http
             {
                 request.Headers[BceConstants.HttpHeaders.Authorization] = config.Signer.Sign(request);
             }
-            HttpWebRequest httpWebRequest = BceHttpClient.CreateHttpWebRequest(request);
-            BceHttpClient.PopulateRequestHeaders(request, httpWebRequest);
+            HttpWebRequest httpWebRequest = CreateHttpWebRequest(request);
+            PopulateRequestHeaders(request, httpWebRequest);
             if (request.Content != null)
             {
                 httpWebRequest.AllowWriteStreamBuffering = false;

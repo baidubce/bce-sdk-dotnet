@@ -9,14 +9,25 @@
 // an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-using System;
-using BaiduBce.Model;
 
-namespace BaiduBce
+using System.Collections.Generic;
+
+namespace BaiduBce.Services.Bos.Model
 {
-    public interface IRetryPolicy
+    public class GetBucketAclResponse : BosResponseBase
     {
-        T Execute<T>(Func<int, T> func);
-        bool CanRetry { get; set; }
+        public const int MaxSupportedAclVersion = 1;
+
+        public int Version { get; set; }
+
+        /**
+         * The user of this specified bucket.
+         */
+        public Grantee Owner { get; set; }
+
+        /**
+         * The accessControlList of this specified bucket.
+         */
+        public List<Grant> AccessControlList { get; set; }
     }
 }

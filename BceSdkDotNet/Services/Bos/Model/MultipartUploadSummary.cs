@@ -10,13 +10,14 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using BaiduBce.Model;
 
-namespace BaiduBce
+namespace BaiduBce.Services.Bos.Model
 {
-    public interface IRetryPolicy
+    public class MultipartUploadSummary
     {
-        T Execute<T>(Func<int, T> func);
-        bool CanRetry { get; set; }
+        public string Key { get; set; }
+        public string UploadId { get; set; }
+        public User Owner { get; set; }
+        public DateTime Initiated { get; set; }
     }
 }

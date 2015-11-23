@@ -21,7 +21,7 @@ namespace BaiduBce.Util
 {
     public static class HashUtils
     {
-        public static String ComputeSHA256Hash(FileInfo fileInfo)
+        public static string ComputeSHA256Hash(FileInfo fileInfo)
         {
             using (Stream stream = fileInfo.OpenRead())
             {
@@ -32,7 +32,7 @@ namespace BaiduBce.Util
             }
         }
 
-        public static String ComputeMD5Hash(FileInfo fileInfo)
+        public static string ComputeMD5Hash(FileInfo fileInfo)
         {
             using (var md5 = MD5.Create())
             {
@@ -43,7 +43,7 @@ namespace BaiduBce.Util
             }
         }
 
-        public static String ComputeMD5HashWithBase64(FileInfo fileInfo)
+        public static string ComputeMD5HashWithBase64(FileInfo fileInfo)
         {
             using (var md5 = MD5.Create())
             {
@@ -51,6 +51,19 @@ namespace BaiduBce.Util
                 {
                     return Convert.ToBase64String(md5.ComputeHash(stream));
                 }
+            }
+        }
+
+        public static string ComputeMD5Hash(Stream stream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                string result = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                if (stream.CanSeek)
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                }
+                return result;
             }
         }
     }

@@ -14,7 +14,7 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
-    public class CreateBucketResponse : BceResponseBase
+    public class CreateBucketResponse : BosResponseBase
     {
     }
 }

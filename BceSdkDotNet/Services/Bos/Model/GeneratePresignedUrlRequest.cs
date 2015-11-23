@@ -10,13 +10,18 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using BaiduBce.Model;
+using System.Collections;
+using System.Collections.Generic;
 
-namespace BaiduBce
+namespace BaiduBce.Services.Bos.Model
 {
-    public interface IRetryPolicy
+    public class GeneratePresignedUrlRequest : ObjectRequestBase
     {
-        T Execute<T>(Func<int, T> func);
-        bool CanRetry { get; set; }
+        public string Method { get; set; }
+        public string ContentType;
+        public string ContentMd5;
+        public int ExpirationInSeconds;
+        public IDictionary<String, String> RequestParameters = new Dictionary<String, String>();
+        public IDictionary<String, String> RequestHeaders = new Dictionary<String, String>();
     }
 }
