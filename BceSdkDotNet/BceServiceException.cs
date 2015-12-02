@@ -58,7 +58,7 @@ namespace BaiduBce
             if (content != null)
             {
                 var errorResponse = JsonUtils.ToObject<BceErrorResponse>(new StreamReader(content));
-                if (errorResponse.Message != null)
+                if (errorResponse != null && errorResponse.Message != null)
                 {
                     bse = new BceServiceException(errorResponse.Message);
                     bse.ErrorCode = errorResponse.Code;

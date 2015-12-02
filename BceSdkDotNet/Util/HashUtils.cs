@@ -54,16 +54,31 @@ namespace BaiduBce.Util
             }
         }
 
-        public static string ComputeMD5Hash(Stream stream)
+        public static string ComputeMD5Hash(Stream stream, long contentLength)
         {
             using (var md5 = MD5.Create())
             {
-                string result = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
-                if (stream.CanSeek)
+                long position = stream.Position;
+
+                byte[] temp = new byte[4096];
+                long offset = 0;
+                int size = 0;
+
+                while (offset < contentLength)
                 {
-                    stream.Seek(0, SeekOrigin.Begin);
+                    size = (contentLength - offset) > 4096 ? 4096 : (int)(contentLength - offset);
+                    size = stream.Read(temp, 0, size);
+                    if (size <= 0)
+                    {
+                        break;
+                    }
+                    offset += size;
+                    md5.TransformBlock(temp, 0, size, temp, 0);
                 }
-                return result;
+
+                md5.TransformFinalBlock(new byte[0], 0, 0);
+                stream.Position = position;
+                return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
             }
         }
     }

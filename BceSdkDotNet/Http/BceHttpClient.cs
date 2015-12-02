@@ -39,6 +39,10 @@ namespace BaiduBce.Http
             PopulateRequestHeaders(request, httpWebRequest);
             if (request.Content != null)
             {
+                if (request.Content.CanSeek)
+                {
+                    request.Content.Position = request.StartPosition;
+                }
                 httpWebRequest.AllowWriteStreamBuffering = false;
                 using (Stream requestStream = WebRequestExtension.GetRequestStreamWithTimeout(httpWebRequest))
                 {
@@ -70,10 +74,6 @@ namespace BaiduBce.Http
                         {
                             log.Debug("error when put data.", e);
                         }
-                    }
-                    if (request.Content.CanSeek)
-                    {
-                        request.Content.Seek(0, SeekOrigin.Begin);
                     }
                 }
 

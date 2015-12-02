@@ -148,8 +148,9 @@ namespace BaiduBce.Auth
                 }
                 headerStrings.Add(HttpUtils.Normalize(key.Trim().ToLower()) + ':' + HttpUtils.Normalize(value.Trim()));
             }
-            headerStrings.Sort();
-
+            // c#的默认排序对于"-"的排序有问题，因此此处一定要加上string.CompareOrdinal，
+            // 默认情况下x-bce-meta-metakey大于x-bce-metadata-directive
+            headerStrings.Sort(string.CompareOrdinal);
             return string.Join("\n", headerStrings.ToArray());
         }
 

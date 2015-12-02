@@ -121,6 +121,13 @@ namespace BaiduBce.UnitTest.Services.Bos
                 var listBucketsResponse = this.client.ListBuckets();
                 Assert.IsTrue(listBucketsResponse.Buckets.Count > 0);
             }
+
+            [TestMethod]
+            public void TestDoesBucketExist()
+            {
+                Assert.IsTrue(this.client.DoesBucketExist(this.bucketName));
+                Assert.IsFalse(this.client.DoesBucketExist("xxxaaa"));
+            }
         }
 
         [TestClass]
@@ -195,6 +202,45 @@ namespace BaiduBce.UnitTest.Services.Bos
         }
 
         [TestClass]
+        public class CopyObjectTest : Base
+        {
+            [TestMethod]
+            public void TestOrdinary()
+            {
+                string objectName = "sample";
+                client.PutObject(bucketName, objectName, "sampledata");
+
+                // 2. 普通拷贝并打印结果
+                string newObjectName = "copyobject";
+                CopyObjectResponse copyObjectResponse = client.CopyObject(bucketName, objectName, bucketName,
+                    newObjectName);
+                // sampledata
+                Assert.AreEqual(Encoding.Default.GetString(client.GetObjectContent(bucketName, newObjectName)),
+                    "sampledata");
+
+                // 3. 拷贝并设置新的meta
+                newObjectName = "copyobject-newmeta";
+                CopyObjectRequest copyObjectRequest = new CopyObjectRequest()
+                {
+                    SourceBucketName = bucketName,
+                    SourceKey = objectName,
+                    BucketName = bucketName,
+                    Key = newObjectName
+                };
+                Dictionary<String, String> userMetadata = new Dictionary<String, String>();
+                userMetadata["metakey"] = "metavalue";
+                ObjectMetadata objectMetadata = new ObjectMetadata()
+                {
+                    UserMetadata = userMetadata
+                };
+                copyObjectRequest.NewObjectMetadata = objectMetadata;
+                client.CopyObject(copyObjectRequest);
+                Assert.AreEqual(client.GetObjectMetadata(bucketName, newObjectName).UserMetadata["metakey"],
+                    "metavalue");
+            }
+        }
+
+        [TestClass]
         public class PutObjectTest : Base
         {
             [TestMethod]
@@ -225,6 +271,8 @@ namespace BaiduBce.UnitTest.Services.Bos
             {
                 ObjectMetadata objectMetadata = new ObjectMetadata();
                 objectMetadata.ContentLength = 2;
+                var userMetaDic = new Dictionary<string, string>();
+                objectMetadata.UserMetadata = userMetaDic;
                 PutObjectRequest request = new PutObjectRequest()
                 {
                     BucketName = this.bucketName,

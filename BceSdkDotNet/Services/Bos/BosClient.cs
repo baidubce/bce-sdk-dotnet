@@ -118,7 +118,7 @@ namespace BaiduBce.Services.Bos
             CheckNotNull(request, "request should not be null.");
             try
             {
-                var internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Delete, request);
+                var internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Head, request);
                 return internalRequest.Config.RetryPolicy.Execute<bool>(attempt =>
                 {
                     var httpWebResponse = this.httpClient.Execute(internalRequest);
@@ -135,7 +135,7 @@ namespace BaiduBce.Services.Bos
                 {
                     return true;
                 }
-                if (e.StatusCode == BceConstants.HttpStatusCode.Forbidden)
+                if (e.StatusCode == BceConstants.HttpStatusCode.NotFound)
                 {
                     return false;
                 }
@@ -454,7 +454,7 @@ namespace BaiduBce.Services.Bos
             else
             {
                 CheckNotNull(input, "Either file or inputStream should be set for PutObjectRequest.");
-                if (metadata.ContentLength < 0)
+                if (metadata.ContentLength <= 0)
                 {
                     logger.Warn("No content length specified for stream data.");
                     metadata.ContentLength = input.Length;
@@ -464,11 +464,6 @@ namespace BaiduBce.Services.Bos
                     throw new ArgumentNullException("ContentLength should not be greater than stream length");
                 }
                 internalRequest.Content = input;
-            }
-
-            if (internalRequest.Content.CanSeek && internalRequest.Content.Position != 0)
-            {
-                throw new ArgumentException("input stream position should be 0");
             }
 
             internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = metadata.ContentLength.ToString();
@@ -717,16 +712,9 @@ namespace BaiduBce.Services.Bos
             internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = request.PartSize.ToString();
 
             Stream input = request.InputStream;
-            if (input.CanSeek)
+            if (input.CanSeek && string.IsNullOrEmpty(request.Md5Digest))
             {
-                if (input.Position != 0)
-                {
-                    throw new ArgumentException("input stream position should be 0");
-                }
-                if (string.IsNullOrEmpty(request.Md5Digest))
-                {
-                    request.Md5Digest = HashUtils.ComputeMD5Hash(input);
-                }
+                request.Md5Digest = HashUtils.ComputeMD5Hash(input, request.PartSize);
             }
 
             using (input)

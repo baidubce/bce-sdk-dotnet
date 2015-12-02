@@ -19,6 +19,8 @@ namespace BaiduBce.Internal
 {
     public class InternalRequest
     {
+        private Stream stream;
+
         public IDictionary<string, string> Parameters { get; set; }
 
         public IDictionary<string, string> Headers { get; set; }
@@ -27,7 +29,23 @@ namespace BaiduBce.Internal
 
         public string HttpMethod { get; set; }
 
-        public Stream Content { get; set; }
+        public Stream Content
+        {
+            get
+            {
+                return stream;
+            }
+            set
+            {
+                stream = value;
+                StartPosition = stream.Position;
+            }
+        }
+
+        /// <summary>
+        /// 记录Stream的初始位置，用于重试时重置Stream的Position
+        /// </summary>
+        public long StartPosition { get; set; }
 
         public BceClientConfiguration Config { get; set; }
 
