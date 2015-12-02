@@ -12,6 +12,7 @@ if not exist %OutputFolderBase% (
 
 echo == %DATE% %TIME% ==
 set PATH=D:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE;%PATH%
+set PATH=C:\WINDOWS\Microsoft.NET\Framework\v3.5;%PATH%
 
 :: compile release
 echo == %DATE% %TIME% ==
