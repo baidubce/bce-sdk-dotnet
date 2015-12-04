@@ -11,6 +11,10 @@
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// The AbortMultipartUploadRequest contains the parameters used for the AbortMultipartUpload method.
+    /// 
+    /// </summary>
     public class AbortMultipartUploadRequest : UploadRequestBase
     {
         

@@ -13,6 +13,9 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Request object for listing all the Baidu Bos buckets owned by a user.
+    /// </summary>
     public class ListBucketsRequest : BceRequestBase
     {
     }

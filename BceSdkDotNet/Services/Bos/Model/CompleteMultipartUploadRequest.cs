@@ -13,9 +13,23 @@ using System.Collections.Generic;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Container for the parameters of the CompleteMultipartUpload operation.
+    /// 
+    /// <para>
+    /// Required Parameters: BucketName, Key, UploadId, ObjectMetadata, PartETags
+    /// </para>
+    /// </summary>
     public class CompleteMultipartUploadRequest : UploadRequestBase
     {
+        /// <summary>
+        /// Optional metadata instructing Baidu Bos how to handle the uploaded data
+        /// (e.g. custom user metadata, hooks for specifying content type, etc.).
+        /// </summary>
         public ObjectMetadata ObjectMetadata { get; set; }
+        /// <summary>
+        /// The list of part numbers and ETags to use when completing the multipart upload.
+        /// </summary>
         public List<PartETag> PartETags { get; set; }
 
         public CompleteMultipartUploadRequest()

@@ -18,14 +18,49 @@ using BaiduBce.Model;
 
 namespace BaiduBce
 {
+
+    /// <summary>
+    /// Abstract base class for BCE service clients.
+    /// 
+    /// <para>
+    /// Responsible for basic client capabilities that are the same across all BCE SDK Java clients
+    /// (ex: setting the client endpoint).
+    /// 
+    /// </para>
+    /// <para>
+    /// Subclass names should be in the form of "com.baidubce.services.xxx.XxxClient", while "xxx" is the service ID and
+    /// "Xxx" is the capitalized service ID.
+    /// </para>
+    /// </summary>
     public abstract class BceClientBase
     {
+        /// <summary>
+        /// The default service domain format for BCE.
+        /// </summary>
         private string serviceEndpointFormat;
 
+        /// <summary>
+        /// The client configuration for this client.
+        /// </summary>
         protected BceClientConfiguration config;
 
+        /// <summary>
+        /// Responsible for sending HTTP requests to services.
+        /// </summary>
         internal BceHttpClient httpClient;
 
+        /// <summary>
+        /// Constructs a new AbstractBceClient with the specified client configuration.
+        /// 
+        /// <para>
+        /// The constructor will extract serviceId from the class name automatically.
+        /// And if there is no endpoint specified in the client configuration, the constructor will create a default one.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="config"> the client configuration. The constructor makes a copy of this parameter so that it is
+        ///     safe to change the configuration after then. </param>
+        /// <param name="serviceEndpointFormat"> the service domain name format. </param>
         public BceClientBase(BceClientConfiguration config, string serviceEndpointFormat)
         {
             this.serviceEndpointFormat = serviceEndpointFormat;
@@ -33,6 +68,12 @@ namespace BaiduBce
             this.httpClient = new BceHttpClient();
         }
 
+        /// <summary>
+        /// Returns the default target service endpoint.
+        /// 
+        /// </summary>
+        /// <returns> the computed service endpoint </returns>
+        /// <exception cref="FormatException"> if the endpoint specified in the client configuration is not a valid URI. </exception>
         public string ComputeEndpoint(BceClientConfiguration config)
         {
             if (config.Endpoint != null)
@@ -44,6 +85,12 @@ namespace BaiduBce
             return string.Format(this.serviceEndpointFormat, protocol, region);
         }
 
+        /// <summary>
+        /// convert httpWebResponse to BceResponse
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="httpWebResponse"></param>
+        /// <returns></returns>
         protected virtual T ToObject<T>(HttpWebResponse httpWebResponse) where T : BceResponseBase, new()
         {
             var content = httpWebResponse.GetResponseStream();

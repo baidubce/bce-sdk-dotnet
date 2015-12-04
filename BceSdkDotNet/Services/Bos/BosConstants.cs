@@ -13,6 +13,7 @@ using System;
 
 namespace BaiduBce.Services.Bos
 {
+
     public static class BosConstants
     {
         public static class Permission

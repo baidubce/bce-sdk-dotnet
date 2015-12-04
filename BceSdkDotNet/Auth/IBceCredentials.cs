@@ -13,9 +13,27 @@ using System;
 
 namespace BaiduBce.Auth
 {
+    /// <summary>
+    /// Provides access to the BCE credentials used for accessing BCE services: BCE access key ID and secret access key.
+    /// These credentials are used to securely sign requests to BCE services.
+    /// 
+    /// <para>
+    /// A basic implementation of this interface is provided in <seealso cref="BaiduBce.Auth.DefaultBceCredentials"/>, but callers
+    /// are free to provide their own implementation, for example, to load BCE credentials from an encrypted file.
+    /// </para>
+    /// </summary>
     public interface IBceCredentials
     {
+        /// <summary>
+        /// Returns the BCE access key ID for this credentials object.
+        /// </summary>
+        /// <returns> the BCE access key ID for this credentials object. </returns>
         string AccessKeyId { get; }
+
+        /// <summary>
+        /// Returns the BCE secret access key for this credentials object.
+        /// </summary>
+        /// <returns> the BCE secret access key for this credentials object. </returns>
         string SecretKey { get; }
     }
 }

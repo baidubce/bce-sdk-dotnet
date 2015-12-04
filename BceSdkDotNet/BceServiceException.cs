@@ -16,6 +16,18 @@ using BaiduBce.Util;
 
 namespace BaiduBce
 {
+
+    /// <summary>
+    /// Extension of BceClientException that represents an error response returned by a BCE service.
+    /// Receiving an exception of this type indicates that the caller's request was correctly transmitted to the service,
+    /// but for some reason, the service was not able to process it, and returned an error response instead.
+    /// 
+    /// <para>
+    /// BceServiceException provides callers several pieces of information that can be used to obtain more information
+    /// about the error and why it occurred. In particular, the errorType field can be used to determine if the caller's
+    /// request was invalid, or the service encountered an error on the server side while processing it.
+    /// </para>
+    /// </summary>
     public class BceServiceException : BceBaseException
     {
         public override string Message
@@ -27,12 +39,25 @@ namespace BaiduBce
             }
         }
 
+        /// <summary>
+        /// The unique BCE identifier for the service request the caller made. The BCE request ID can uniquely identify
+        /// the BCE request, and is used for reporting an error to BCE support team.
+        /// </summary>
         public string RequestId { get; set; }
 
+        /// <summary>
+        /// The BCE error code represented by this exception.
+        /// </summary>
         public string ErrorCode { get; set; }
 
+        /// <summary>
+        /// The error message as returned by the service.
+        /// </summary>
         public string ErrorMessage { get; set; }
 
+        /// <summary>
+        /// The HTTP status code that was returned with this error.
+        /// </summary>
         public int StatusCode { get; set; }
 
         public BceServiceException()
@@ -51,6 +76,11 @@ namespace BaiduBce
             this.ErrorMessage = message;
         }
 
+        /// <summary>
+        /// convert HttpWebResponse to BceServiceException
+        /// </summary>
+        /// <param name="response">the input HttpWebResponse</param>
+        /// <returns></returns>
         public static BceServiceException CreateFromHttpWebResponse(HttpWebResponse response)
         {
             BceServiceException bse = null;

@@ -13,6 +13,13 @@ using System.IO;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Contains the parameters used for the UploadPart operation on Baidu Bos.
+    /// 
+    /// <para>
+    /// Required Parameters: BucketName, Key, UploadId, PartNumber
+    /// </para>
+    /// </summary>
     public class UploadPartRequest : UploadRequestBase
     {
         /// <summary>
@@ -35,7 +42,8 @@ namespace BaiduBce.Services.Bos.Model
         public string Md5Digest;
 
         /// <summary>
-        /// The stream containing the data to upload for the new part.
+        /// The stream containing the data to upload for the new part. Exactly one
+        /// File or InputStream must be specified as the input to this operation.
         /// </summary>
         public Stream InputStream;
     }

@@ -16,8 +16,16 @@ using System.Text;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Contains the data returned by Baidu Bos from the <code>putObject</code> operation.
+    /// Use this request to access information about the new object created from the
+    /// <code>putObject</code> request, such as its ETag and optional version ID.
+    /// </summary>
     public class PutObjectResponse : BosResponseBase
     {
+        /// <summary>
+        /// The ETag value of the new object
+        /// </summary>
         public string ETAG { get; set; }
     }
 }

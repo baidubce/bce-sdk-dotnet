@@ -23,6 +23,9 @@ using System.Web;
 
 namespace BaiduBce.Auth
 {
+    /// <summary>
+    /// The V1 implementation of Signer with the BCE signing protocol.
+    /// </summary>
     public class BceV1Signer : ISigner
     {
         private static readonly ILog log = LogManager.GetLogger(typeof (BceV1Signer));
@@ -30,6 +33,8 @@ namespace BaiduBce.Auth
         private const string BceAuthVersion = "bce-auth-v1";
 
         private const string DefaultEncoding = "UTF-8";
+
+        // Default headers to sign with the BCE signing protocol.
         private static readonly HashSet<string> defaultHeadersToSign = new HashSet<string>();
 
         static BceV1Signer()
@@ -40,6 +45,10 @@ namespace BaiduBce.Auth
             defaultHeadersToSign.Add(BceConstants.HttpHeaders.ContentMd5.ToLower());
         }
 
+        /// <summary>
+        /// Sign the given request. Modifies the passed-in request to apply the signature.
+        /// </summary>
+        /// <param name="request">     the request to sign. </param>
         public string Sign(InternalRequest request)
         {
             if (request == null)

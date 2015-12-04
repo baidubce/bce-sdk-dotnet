@@ -13,9 +13,18 @@ using System;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Represents the owner of an Baidu Bos bucket.
+    /// </summary>
     public class User
     {
+        /// <summary>
+        /// The owner id.
+        /// </summary>
         public string Id { get; set; }
+        /// <summary>
+        /// The display name of the owner.
+        /// </summary>
         public string DisplayName { get; set; }
     }
 }

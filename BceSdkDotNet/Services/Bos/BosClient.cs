@@ -26,6 +26,10 @@ using Newtonsoft.Json;
 
 namespace BaiduBce.Services.Bos
 {
+
+    /// <summary>
+    /// Provides the client for accessing the Baidu Object Service.
+    /// </summary>
     public class BosClient : BceClientBase
     {
         private const string UrlPrefix = "/v1";
@@ -33,26 +37,54 @@ namespace BaiduBce.Services.Bos
 
         private ILog logger = LogManager.GetLogger(typeof (BosClient));
 
+        /// <summary>
+        /// Constructs a new client to invoke service methods on Bos.
+        /// </summary>
         public BosClient()
             : this(new BceClientConfiguration())
         {
         }
 
+        /// <summary>
+        /// Constructs a new Bos client using the client configuration to access Bos.
+        /// </summary>
+        /// <param name="config"> The bos client configuration options controlling how this client
+        ///                            connects to Bos (e.g. retry counts, etc). </param>
         public BosClient(BceClientConfiguration config)
             : base(config, serviceEndpointFormat)
         {
         }
 
+        /// <summary>
+        /// Gets the current owner of the Bos account that the authenticated sender of the request is using.
+        /// 
+        /// <para>
+        /// The caller <i>must</i> authenticate with a valid BCE Access Key ID that is registered with Bos.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <returns> The account of the authenticated sender </returns>
         public User GetBosAccountOwner()
         {
             return ListBuckets().Owner;
         }
 
+        /// <summary>
+        /// Creates a new Bos bucket with the specified name.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket to create.
+        ///     All buckets in Bos share a single namespace; ensure the bucket is given a unique name. </param>
+        /// <returns> The newly created bucket. </returns>
         public CreateBucketResponse CreateBucket(string bucketName)
         {
             return this.CreateBucket(new CreateBucketRequest() {BucketName = bucketName});
         }
 
+        /// <summary>
+        /// Creates a new Bos bucket with the specified name.
+        /// </summary>
+        /// <param name="request"> The request object containing all options for creating a Bos bucket. </param>
+        /// <returns> The newly created bucket. </returns>
         public CreateBucketResponse CreateBucket(CreateBucketRequest request)
         {
             CheckNotNull(request, "request should NOT be null.");
@@ -68,11 +100,34 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Returns a list of all Bos buckets that the authenticated sender of the request owns.
+        /// 
+        /// <para>
+        /// Users must authenticate with a valid BCE Access Key ID that is registered
+        /// with Bos. Anonymous requests cannot list buckets, and users cannot
+        /// list buckets that they did not create.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <returns> All of the Bos buckets owned by the authenticated sender of the request. </returns>
         public ListBucketsResponse ListBuckets()
         {
             return ListBuckets(new ListBucketsRequest());
         }
 
+        /// <summary>
+        /// Returns a list of all Bos buckets that the authenticated sender of the request owns.
+        /// 
+        /// <para>
+        /// Users must authenticate with a valid BCE Access Key ID that is registered
+        /// with Bos. Anonymous requests cannot list buckets, and users cannot
+        /// list buckets that they did not create.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="request"> The request containing all of the options related to the listing of buckets. </param>
+        /// <returns> All of the Bos buckets owned by the authenticated sender of the request. </returns>
         public ListBucketsResponse ListBuckets(ListBucketsRequest request)
         {
             CheckNotNull(request, "request should NOT be null.");
@@ -88,11 +143,31 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Deletes the specified bucket. All objects in the bucket must be deleted before the bucket itself
+        /// can be deleted.
+        /// 
+        /// <para>
+        /// Only the owner of a bucket can delete it, regardless of the bucket's access control policy.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket to delete. </param>
         public void DeleteBucket(string bucketName)
         {
             this.DeleteBucket(new DeleteBucketRequest() {BucketName = bucketName});
         }
 
+        /// <summary>
+        /// Deletes the specified bucket. All objects in the bucket must be deleted before the bucket itself
+        /// can be deleted.
+        /// 
+        /// <para>
+        /// Only the owner of a bucket can delete it, regardless of the bucket's access control policy.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="request"> The request object containing all options for deleting a Bos bucket. </param>
         public void DeleteBucket(DeleteBucketRequest request)
         {
             CheckNotNull(request, "request should NOT be null.");
@@ -108,11 +183,43 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Checks if the specified bucket exists. Bos buckets are named in a
+        /// global namespace; use this method to determine if a specified bucket name
+        /// already exists, and therefore can't be used to create a new bucket.
+        /// 
+        /// <para>
+        /// If invalid security credentials are used to execute this method, the
+        /// client is not able to distinguish between bucket permission errors and
+        /// invalid credential errors, and this method could return an incorrect
+        /// result.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket to check. </param>
+        /// <returns> The value <code>true</code> if the specified bucket exists in Bos;
+        ///     the value <code>false</code> if there is no bucket in Bos with that name. </returns>
         public bool DoesBucketExist(string bucketName)
         {
             return this.DoesBucketExist(new DoesBucketExistRequest() {BucketName = bucketName});
         }
 
+        /// <summary>
+        /// Checks if the specified bucket exists. Bos buckets are named in a
+        /// global namespace; use this method to determine if a specified bucket name
+        /// already exists, and therefore can't be used to create a new bucket.
+        /// 
+        /// <para>
+        /// If invalid security credentials are used to execute this method, the
+        /// client is not able to distinguish between bucket permission errors and
+        /// invalid credential errors, and this method could return an incorrect
+        /// result.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="request"> The request object containing all options for checking a Bos bucket. </param>
+        /// <returns> The value <code>true</code> if the specified bucket exists in Bos;
+        ///     the value <code>false</code> if there is no bucket in Bos with that name. </returns>
         public bool DoesBucketExist(DoesBucketExistRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -143,11 +250,41 @@ namespace BaiduBce.Services.Bos
             }
         }
 
+        /// <summary>
+        /// Gets the ACL for the specified Bos bucket.
+        /// 
+        /// <para>
+        /// Each bucket and object in Bos has an ACL that defines its access
+        /// control policy. When a request is made, Bos authenticates the
+        /// request using its standard authentication procedure and then checks the
+        /// ACL to verify the sender was granted access to the bucket or object. If
+        /// the sender is approved, the request proceeds. Otherwise, Bos
+        /// returns an error.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket whose ACL is being retrieved. </param>
+        /// <returns> The <code>GetBuckeetAclResponse</code> for the specified Bos bucket. </returns>
         public GetBucketAclResponse GetBucketAcl(string bucketName)
         {
             return this.GetBucketAcl(new BucketRequestBase() {BucketName = bucketName});
         }
 
+        /// <summary>
+        /// Gets the ACL for the specified Bos bucket.
+        /// 
+        /// <para>
+        /// Each bucket and object in Bos has an ACL that defines its access
+        /// control policy. When a request is made, Bos authenticates the
+        /// request using its standard authentication procedure and then checks the
+        /// ACL to verify the sender was granted access to the bucket or object. If
+        /// the sender is approved, the request proceeds. Otherwise, Bos
+        /// returns an error.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="request"> The request containing the name of the bucket whose ACL is being retrieved. </param>
+        /// <returns> The <code>GetBuckeetAclResponse</code> for the specified Bos bucket. </returns>
         public GetBucketAclResponse GetBucketAcl(BucketRequestBase request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -170,11 +307,28 @@ namespace BaiduBce.Services.Bos
             return response;
         }
 
+        /// <summary>
+        /// Sets the CannedAccessControlList for the specified Bos bucket using one of
+        /// the pre-configured <code>CannedAccessControlLists</code>.
+        /// 
+        /// <para>
+        /// A <code>CannedAccessControlList</code>
+        /// provides a quick way to configure an object or bucket with commonly used
+        /// access control policies.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket whose ACL is being set. </param>
+        /// <param name="acl"> The pre-configured <code>CannedAccessControlLists</code> to set for the specified bucket. </param>
         public void SetBucketAcl(string bucketName, string acl)
         {
             this.SetBucketAcl(new SetBucketAclRequest() {BucketName = bucketName, CannedAcl = acl});
         }
 
+        /// <summary>
+        /// Sets the Acl for the specified Bos bucket.
+        /// </summary>
+        /// <param name="request"> The request object containing the bucket to modify and the ACL to set. </param>
         public void SetBucketAcl(SetBucketAclRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -209,12 +363,30 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Returns a pre-signed URL for accessing a Bos resource.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the desired object. </param>
+        /// <param name="key"> The key in the specified bucket under which the desired object is stored. </param>
+        /// <param name="expirationInSeconds"> The expiration after which the returned pre-signed URL will expire. </param>
+        /// <returns> A pre-signed URL which expires at the specified time, and can be
+        ///     used to allow anyone to download the specified object from Bos,
+        ///     without exposing the owner's Bce secret access key. </returns>
         public Uri GeneratePresignedUrl(string bucketName, string key, int expirationInSeconds)
         {
             return this.GeneratePresignedUrl(bucketName, key, expirationInSeconds, BceConstants.HttpMethod.Get);
         }
 
-
+        /// <summary>
+        /// Returns a pre-signed URL for accessing a Bos resource.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the desired object. </param>
+        /// <param name="key"> The key in the specified bucket under which the desired object is stored. </param>
+        /// <param name="expirationInSeconds"> The expiration after which the returned pre-signed URL will expire. </param>
+        /// <param name="method">     The HTTP method verb to use for this URL </param>
+        /// <returns> A pre-signed URL which expires at the specified time, and can be
+        ///     used to allow anyone to download the specified object from Bos,
+        ///     without exposing the owner's Bce secret access key. </returns>
         public Uri GeneratePresignedUrl(string bucketName, string key, int expirationInSeconds, string method)
         {
             GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest()
@@ -227,6 +399,14 @@ namespace BaiduBce.Services.Bos
             return this.GeneratePresignedUrl(request);
         }
 
+        /// <summary>
+        /// Returns a pre-signed URL for accessing a Bos resource.
+        /// </summary>
+        /// <param name="request"> The request object containing all the options for generating a
+        ///     pre-signed URL (bucket name, key, expiration date, etc). </param>
+        /// <returns> A pre-signed URL which expires at the specified time, and can be
+        ///     used to allow anyone to download the specified object from Bos,
+        ///     without exposing the owner's Bce secret access key. </returns>
         public Uri GeneratePresignedUrl(GeneratePresignedUrlRequest request)
         {
             CheckNotNull(request, "The request parameter must be specified when generating a pre-signed URL");
@@ -271,16 +451,43 @@ namespace BaiduBce.Services.Bos
             return ConvertRequestToUri(internalRequest);
         }
 
+        /// <summary>
+        /// Returns ListObjectsResponse containing a list of summary information about the objects in the specified buckets.
+        /// List results are <i>always</i> returned in lexicographic (alphabetical) order.
+        /// </summary>
+        /// <param name="bucketName"> The name of the Bos bucket to list. </param>
+        /// <returns> ListObjectsResponse containing a listing of the objects in the specified bucket, along with any
+        ///     other associated information, such as common prefixes (if a delimiter was specified), the original
+        ///     request parameters, etc. </returns>
         public ListObjectsResponse ListObjects(string bucketName)
         {
             return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName});
         }
 
+        /// <summary>
+        /// Returns ListObjectsResponse containing a list of summary information about the objects in the specified buckets.
+        /// List results are <i>always</i> returned in lexicographic (alphabetical) order.
+        /// </summary>
+        /// <param name="bucketName"> The name of the Bos bucket to list. </param>
+        /// <param name="prefix"> An optional parameter restricting the response to keys beginning with the specified prefix.
+        ///     Use prefixes to separate a bucket into different sets of keys, similar to how a file system
+        ///     organizes files into directories. </param>
+        /// <returns> ListObjectsResponse containing a listing of the objects in the specified bucket, along with any
+        ///     other associated information, such as common prefixes (if a delimiter was specified), the original
+        ///     request parameters, etc. </returns>
         public ListObjectsResponse ListObjects(string bucketName, string prefix)
         {
             return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName, Prefix = prefix});
         }
 
+        /// <summary>
+        /// Returns ListObjectsResponse containing a list of summary information about the objects in the specified buckets.
+        /// List results are <i>always</i> returned in lexicographic (alphabetical) order.
+        /// </summary>
+        /// <param name="request"> The request object containing all options for listing the objects in a specified bucket. </param>
+        /// <returns> ListObjectsResponse containing a listing of the objects in the specified bucket, along with any
+        ///     other associated information, such as common prefixes (if a delimiter was specified), the original
+        ///     request parameters, etc. </returns>
         public ListObjectsResponse ListObjects(ListObjectsRequest request)
         {
             CheckNotNull(request, "request should NOT be null.");
@@ -326,6 +533,14 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Provides an easy way to continue a truncated object listing and retrieve the next page of results.
+        /// </summary>
+        /// <param name="previousResponse"> The previous truncated <code>ListObjectsResponse</code>. If a non-truncated
+        ///     <code>ListObjectsResponse</code> is passed in, an empty <code>ListObjectsResponse</code>
+        ///     is returned without ever contacting Bos. </param>
+        /// <returns> The next set of <code>ListObjectsResponse</code> results, beginning immediately
+        ///     after the last result in the specified previous <code>ListObjectsResponse</code>. </returns>
         public ListObjectsResponse ListNextBatchOfObjects(ListObjectsResponse previousResponse)
         {
             CheckNotNull(previousResponse, "response should NOT be null.");
@@ -352,11 +567,27 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Uploads the specified file to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="fileInfo"> The file containing the data to be uploaded to Bos. </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, FileInfo fileInfo)
         {
             return this.PutObject(new PutObjectRequest() {BucketName = bucketName, Key = key, FileInfo = fileInfo});
         }
 
+        /// <summary>
+        /// Uploads the specified file and object metadata to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="fileInfo"> The file containing the data to be uploaded to Bos. </param>
+        /// <param name="metadata"> Additional metadata instructing Bos how to handle the uploaded data
+        ///     (e.g. custom user metadata, hooks for specifying content type, etc.). </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, FileInfo fileInfo, ObjectMetadata metadata)
         {
             return this.PutObject(new PutObjectRequest()
@@ -368,21 +599,53 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Uploads the specified string to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="value"> The string containing the value to be uploaded to Bos. </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, string value)
         {
             return this.PutObject(bucketName, key, value, new ObjectMetadata());
         }
 
+        /// <summary>
+        /// Uploads the specified string and object metadata to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="value"> The string containing the value to be uploaded to Bos. </param>
+        /// <param name="metadata"> Additional metadata instructing Bos how to handle the uploaded data
+        ///     (e.g. custom user metadata, hooks for specifying content type, etc.). </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, string value, ObjectMetadata metadata)
         {
             return this.PutObject(bucketName, key, Encoding.UTF8.GetBytes(value), metadata);
         }
 
+        /// <summary>
+        /// Uploads the specified bytes to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="value"> The bytes containing the value to be uploaded to Bos. </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, byte[] value)
         {
             return this.PutObject(bucketName, key, value, new ObjectMetadata());
         }
 
+        /// <summary>
+        /// Uploads the specified bytes and object metadata to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="value"> The bytes containing the value to be uploaded to Bos. </param>
+        /// <param name="metadata"> Additional metadata instructing Bos how to handle the uploaded data
+        ///     (e.g. custom user metadata, hooks for specifying content type, etc.). </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, byte[] value, ObjectMetadata metadata)
         {
             if (metadata.ContentLength == 0)
@@ -398,11 +661,27 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Uploads the specified input stream to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="input"> The input stream containing the value to be uploaded to Bos. </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, Stream input)
         {
             return this.PutObject(bucketName, key, input, new ObjectMetadata());
         }
 
+        /// <summary>
+        /// Uploads the specified input stream and object metadata to Bos under the specified bucket and key name.
+        /// </summary>
+        /// <param name="bucketName"> The name of an existing bucket, to which you have Write permission. </param>
+        /// <param name="key"> The key under which to store the specified file. </param>
+        /// <param name="input"> The input stream containing the value to be uploaded to Bos. </param>
+        /// <param name="metadata"> Additional metadata instructing Bos how to handle the uploaded data
+        ///     (e.g. custom user metadata, hooks for specifying content type, etc.). </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, Stream input, ObjectMetadata metadata)
         {
             return this.PutObject(new PutObjectRequest()
@@ -414,6 +693,13 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Uploads a new object to the specified Bos bucket. The <code>PutObjectRequest</code> contains all the
+        /// details of the request, including the bucket to upload to, the key the object will be uploaded under,
+        /// and the file or input stream containing the data to upload.
+        /// </summary>
+        /// <param name="request"> The request object containing all the parameters to upload a new object to Bos. </param>
+        /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(PutObjectRequest request)
         {
             CheckNotNull(request, "request should NOT be null.");
@@ -488,26 +774,47 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Gets the object stored in Bos under the specified bucket and key.
-        /// You should close the stream after you call this method
         /// </summary>
-        /// <param name="bucketName">The name of the bucket containing the desired object.</param>
-        /// <param name="key">The key under which the desired object is stored.</param>
-        /// <returns>The object stored in Bos in the specified bucket and key.</returns>
+        /// <param name="bucketName"> The name of the bucket containing the desired object. </param>
+        /// <param name="key"> The key under which the desired object is stored. </param>
+        /// <returns> The object stored in Bos in the specified bucket and key. </returns>
         public BosObject GetObject(string bucketName, string key)
         {
             return this.GetObject(new GetObjectRequest() {BucketName = bucketName, Key = key});
         }
 
+        /// <summary>
+        /// Gets the object metadata for the object stored in Bos under the specified bucket and key,
+        /// and saves the object contents to the specified file.
+        /// Returns <code>null</code> if the specified constraints weren't met.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the desired object. </param>
+        /// <param name="key"> The key under which the desired object is stored. </param>
+        /// <param name="destinationFile"> Indicates the file (which might already exist)
+        ///     where to save the object content being downloading from Bos. </param>
+        /// <returns> All Bos object metadata for the specified object.
+        ///     Returns <code>null</code> if constraints were specified but not met. </returns>
         public ObjectMetadata GetObject(string bucketName, string key, FileInfo destinationFile)
         {
             return this.GetObject(new GetObjectRequest() {BucketName = bucketName, Key = key}, destinationFile);
         }
 
+        /// <summary>
+        /// Gets the object content stored in Bos under the specified bucket and key.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the desired object. </param>
+        /// <param name="key"> The key under which the desired object is stored. </param>
+        /// <returns> The object content stored in Bos in the specified bucket and key. </returns>
         public byte[] GetObjectContent(string bucketName, string key)
         {
             return this.GetObjectContent(new GetObjectRequest() {BucketName = bucketName, Key = key});
         }
 
+        /// <summary>
+        /// Gets the object content stored in Bos under the specified bucket and key.
+        /// </summary>
+        /// <param name="request"> The request object containing all the options on how to download the Bos object content. </param>
+        /// <returns> The object content stored in Bos in the specified bucket and key. </returns>
         public byte[] GetObjectContent(GetObjectRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -529,10 +836,9 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Gets the object stored in Bos under the specified bucket and key.
-        /// You should close the stream after you call this method
         /// </summary>
-        /// <param name="request">The request object containing all the options on how to download the object.</param>
-        /// <returns>The object stored in Bos in the specified bucket and key.</returns>
+        /// <param name="request"> The request object containing all the options on how to download the object. </param>
+        /// <returns> The object stored in Bos in the specified bucket and key. </returns>
         public BosObject GetObject(GetObjectRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -551,6 +857,16 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Gets the object metadata for the object stored in Bos under the specified bucket and key,
+        /// and saves the object contents to the specified file.
+        /// Returns <code>null</code> if the specified constraints weren't met.
+        /// </summary>
+        /// <param name="request"> The request object containing all the options on how to download the Bos object content. </param>
+        /// <param name="destinationFileInfo"> Indicates the file (which might already exist) where to save the object
+        ///     content being downloading from Bos. </param>
+        /// <returns> All Bos object metadata for the specified object.
+        ///     Returns <code>null</code> if constraints were specified but not met. </returns>
         public ObjectMetadata GetObject(GetObjectRequest request, FileInfo destinationFileInfo)
         {
             CheckNotNull(request, "request should not be null.");
@@ -572,11 +888,38 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Gets the metadata for the specified Bos object without actually fetching the object itself.
+        /// This is useful in obtaining only the object metadata, and avoids wasting bandwidth on fetching
+        /// the object data.
+        /// 
+        /// <para>
+        /// The object metadata contains information such as content type, content disposition, etc.,
+        /// as well as custom user metadata that can be associated with an object in Bos.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the object's whose metadata is being retrieved. </param>
+        /// <param name="key"> The key of the object whose metadata is being retrieved. </param>
+        /// <returns> All Bos object metadata for the specified object. </returns>
         public ObjectMetadata GetObjectMetadata(string bucketName, string key)
         {
             return this.GetObjectMetadata(new ObjectRequestBase() {BucketName = bucketName, Key = key});
         }
 
+        /// <summary>
+        /// Gets the metadata for the specified Bos object without actually fetching the object itself.
+        /// This is useful in obtaining only the object metadata, and avoids wasting bandwidth on fetching
+        /// the object data.
+        /// 
+        /// <para>
+        /// The object metadata contains information such as content type, content disposition, etc.,
+        /// as well as custom user metadata that can be associated with an object in Bos.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="request"> The request object specifying the bucket, key whose metadata is being retrieved. </param>
+        /// <returns> All Bos object metadata for the specified object. </returns>
         public ObjectMetadata GetObjectMetadata(ObjectRequestBase request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -592,6 +935,15 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Copies a source object to a new destination in Bos.
+        /// </summary>
+        /// <param name="sourceBucketName"> The name of the bucket containing the source object to copy. </param>
+        /// <param name="sourceKey"> The key in the source bucket under which the source object is stored. </param>
+        /// <param name="destinationBucketName"> The name of the bucket in which the new object will be created.
+        ///     This can be the same name as the source bucket's. </param>
+        /// <param name="destinationKey"> The key in the destination bucket under which the new object will be created. </param>
+        /// <returns> A CopyObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public CopyObjectResponse CopyObject(
             string sourceBucketName,
             string sourceKey,
@@ -607,12 +959,17 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Copies a source object to a new destination in Bos.
+        /// </summary>
+        /// <param name="request"> The request object containing all the options for copying an Bos object. </param>
+        /// <returns> A CopyObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public CopyObjectResponse CopyObject(CopyObjectRequest request)
         {
             CheckNotNull(request, "request should not be null.");
             if (string.IsNullOrEmpty(request.SourceKey))
             {
-                throw new ArgumentException("object key should not be null or empty");
+                throw new ArgumentNullException("object key should not be null or empty");
             }
 
             InternalRequest internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Put, request);
@@ -645,11 +1002,20 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Deletes the specified object in the specified bucket.
+        /// </summary>
+        /// <param name="bucketName"> The name of the Bos bucket containing the object to delete. </param>
+        /// <param name="key"> The key of the object to delete. </param>
         public void DeleteObject(string bucketName, string key)
         {
             this.DeleteObject(new ObjectRequestBase() {BucketName = bucketName, Key = key});
         }
 
+        /// <summary>
+        /// Deletes the specified object in the specified bucket.
+        /// </summary>
+        /// <param name="request"> The request object containing all options for deleting a Bos object. </param>
         public void DeleteObject(ObjectRequestBase request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -665,6 +1031,16 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Initiates a multipart upload and returns an InitiateMultipartUploadResponse
+        /// which contains an upload ID. This upload ID associates all the parts in
+        /// the specific upload and is used in each of your subsequent uploadPart requests.
+        /// You also include this upload ID in the final request to either complete, or abort the multipart
+        /// upload request.
+        /// </summary>
+        /// <param name="bucketName"> The name of the Bos bucket containing the object to initiate. </param>
+        /// <param name="key"> The key of the object to initiate. </param>
+        /// <returns> An InitiateMultipartUploadResponse from Bos. </returns>
         public InitiateMultipartUploadResponse InitiateMultipartUpload(string bucketName, string key)
         {
             return this.InitiateMultipartUpload(new InitiateMultipartUploadRequest()
@@ -674,6 +1050,15 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Initiates a multipart upload and returns an InitiateMultipartUploadResponse
+        /// which contains an upload ID. This upload ID associates all the parts in
+        /// the specific upload and is used in each of your subsequent uploadPart requests.
+        /// You also include this upload ID in the final request to either complete, or abort the multipart
+        /// upload request.
+        /// </summary>
+        /// <param name="request"> The InitiateMultipartUploadRequest object that specifies all the parameters of this operation. </param>
+        /// <returns> An InitiateMultipartUploadResponse from Bos. </returns>
         public InitiateMultipartUploadResponse InitiateMultipartUpload(InitiateMultipartUploadRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -696,6 +1081,12 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Uploads a part in a multipart upload. You must initiate a multipart
+        /// upload before you can upload any part.
+        /// </summary>
+        /// <param name="request"> The UploadPartRequest object that specifies all the parameters of this operation. </param>
+        /// <returns> An UploadPartResponse from Bos containing the part number and ETag of the new part. </returns>
         public UploadPartResponse UploadPart(UploadPartRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -747,6 +1138,13 @@ namespace BaiduBce.Services.Bos
             }
         }
 
+        /// <summary>
+        /// Lists the parts that have been uploaded for a specific multipart upload.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the multipart upload whose parts are being listed. </param>
+        /// <param name="key"> The key of the associated multipart upload whose parts are being listed. </param>
+        /// <param name="uploadId"> The ID of the multipart upload whose parts are being listed. </param>
+        /// <returns> Returns a ListPartsResponse from Bos. </returns>
         public ListPartsResponse ListParts(string bucketName, string key, string uploadId)
         {
             return ListParts(new ListPartsRequest()
@@ -757,7 +1155,11 @@ namespace BaiduBce.Services.Bos
             });
         }
 
-
+        /// <summary>
+        /// Lists the parts that have been uploaded for a specific multipart upload.
+        /// </summary>
+        /// <param name="request"> The ListPartsRequest object that specifies all the parameters of this operation. </param>
+        /// <returns> Returns a ListPartsResponse from Bos. </returns>
         public ListPartsResponse ListParts(ListPartsRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -782,6 +1184,15 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Completes a multipart upload by assembling previously uploaded parts.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the multipart upload to complete. </param>
+        /// <param name="key"> The key of the multipart upload to complete. </param>
+        /// <param name="uploadId"> The ID of the multipart upload to complete. </param>
+        /// <param name="partETags"> The list of part numbers and ETags to use when completing the multipart upload. </param>
+        /// <returns> A CompleteMultipartUploadResponse from Bos containing the ETag for
+        ///     the new object composed of the individual parts. </returns>
         public CompleteMultipartUploadResponse CompleteMultipartUpload(string bucketName, string key, string uploadId,
             List<PartETag> partETags)
         {
@@ -794,6 +1205,17 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Completes a multipart upload by assembling previously uploaded parts.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the multipart upload to complete. </param>
+        /// <param name="key"> The key of the multipart upload to complete. </param>
+        /// <param name="uploadId"> The ID of the multipart upload to complete. </param>
+        /// <param name="partETags"> The list of part numbers and ETags to use when completing the multipart upload. </param>
+        /// <param name="metadata"> Additional metadata instructing Bos how to handle the uploaded data
+        ///     (e.g. custom user metadata, hooks for specifying content type, etc.). </param>
+        /// <returns> A CompleteMultipartUploadResponse from Bos containing the ETag for
+        ///     the new object composed of the individual parts. </returns>
         public CompleteMultipartUploadResponse CompleteMultipartUpload(string bucketName, string key, string uploadId,
             List<PartETag> partETags, ObjectMetadata metadata)
         {
@@ -807,6 +1229,12 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Completes a multipart upload by assembling previously uploaded parts.
+        /// </summary>
+        /// <param name="request"> The CompleteMultipartUploadRequest object that specifies all the parameters of this operation. </param>
+        /// <returns> A CompleteMultipartUploadResponse from Bos containing the ETag for
+        ///     the new object composed of the individual parts. </returns>
         public CompleteMultipartUploadResponse CompleteMultipartUpload(CompleteMultipartUploadRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -833,6 +1261,18 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Aborts a multipart upload. After a multipart upload is aborted, no
+        /// additional parts can be uploaded using that upload ID. The storage
+        /// consumed by any previously uploaded parts will be freed. However, if any
+        /// part uploads are currently in progress, those part uploads may or may not
+        /// succeed. As a result, it may be necessary to abort a given multipart
+        /// upload multiple times in order to completely free all storage consumed by
+        /// all parts.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the multipart upload to abort. </param>
+        /// <param name="key"> The key of the multipart upload to abort. </param>
+        /// <param name="uploadId"> The ID of the multipart upload to abort. </param>
         public void AbortMultipartUpload(string bucketName, string key, string uploadId)
         {
             AbortMultipartUpload(new AbortMultipartUploadRequest()
@@ -843,6 +1283,16 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Aborts a multipart upload. After a multipart upload is aborted, no
+        /// additional parts can be uploaded using that upload ID. The storage
+        /// consumed by any previously uploaded parts will be freed. However, if any
+        /// part uploads are currently in progress, those part uploads may or may not
+        /// succeed. As a result, it may be necessary to abort a given multipart
+        /// upload multiple times in order to completely free all storage consumed by
+        /// all parts.
+        /// </summary>
+        /// <param name="request"> The AbortMultipartUploadRequest object that specifies all the parameters of this operation. </param>
         public void AbortMultipartUpload(AbortMultipartUploadRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -860,11 +1310,23 @@ namespace BaiduBce.Services.Bos
             });
         }
 
+        /// <summary>
+        /// Lists in-progress multipart uploads. An in-progress multipart upload is a multipart upload that has
+        /// been initiated, using the InitiateMultipartUpload request, but has not yet been completed or aborted.
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket containing the uploads to list. </param>
+        /// <returns> A ListMultipartUploadsResponse from Bos. </returns>
         public ListMultipartUploadsResponse ListMultipartUploads(string bucketName)
         {
             return ListMultipartUploads(new ListMultipartUploadsRequest() {BucketName = bucketName});
         }
 
+        /// <summary>
+        /// Lists in-progress multipart uploads. An in-progress multipart upload is a multipart upload that has
+        /// been initiated, using the InitiateMultipartUpload request, but has not yet been completed or aborted.
+        /// </summary>
+        /// <param name="request"> The ListMultipartUploadsRequest object that specifies all the parameters of this operation. </param>
+        /// <returns> A ListMultipartUploadsResponse from Bos. </returns>
         public ListMultipartUploadsResponse ListMultipartUploads(ListMultipartUploadsRequest request)
         {
             CheckNotNull(request, "request should not be null.");
@@ -969,6 +1431,11 @@ namespace BaiduBce.Services.Bos
             return objectMetadata;
         }
 
+        /// <summary>
+        /// Populates the specified request object with the appropriate headers from the ObjectMetadata object.
+        /// </summary>
+        /// <param name="request"> The request to populate with headers. </param>
+        /// <param name="metadata"> The metadata containing the header information to include in the request. </param>
         private static void PopulateRequestMetadata(InternalRequest request, ObjectMetadata metadata)
         {
             if (metadata.ContentType != null)

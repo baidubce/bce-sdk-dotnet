@@ -13,10 +13,24 @@ using System.Collections.Generic;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Contains the results of initiating a multipart upload, particularly the unique ID of the new multipart upload.
+    /// </summary>
     public class InitiateMultipartUploadResponse : BosResponseBase
     {
+        /// <summary>
+        /// The object key for which the multipart upload was initiated.
+        /// </summary>
         public string Key { get; set; }
+
+        /// <summary>
+        /// The name of the bucket in which the new multipart upload was initiated.
+        /// </summary>
         public string Bucket { get; set; }
+
+        /// <summary>
+        /// The unique ID of the new multipart upload.
+        /// </summary>
         public string UploadId { get; set; }
     }
 }

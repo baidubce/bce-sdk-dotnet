@@ -16,13 +16,35 @@ using System.Text;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Contains the summary of an object stored in a Baidu Bos bucket. This object doesn't contain contain the
+    /// object's full metadata or any of its contents.
+    /// </summary>
     public class BosObjectSummary
     {
+        /// <summary>
+        /// The name of the bucket in which this object is stored.
+        /// </summary>
         public string BucketName { get; set; }
+        /// <summary>
+        /// The key under which this object is stored.
+        /// </summary>
         public string Key { get; set; }
+        /// <summary>
+        /// Hex encoded MD5 hash of this object's contents, as computed by Baidu Bos.
+        /// </summary>
         public string ETag { get; set; }
+        /// <summary>
+        /// The size of this object, in bytes.
+        /// </summary>
         public long Size { get; set; }
+        /// <summary>
+        /// The date, according to Baidu Bos, when this object was last modified.
+        /// </summary>
         public DateTime LastModified { get; set; }
+        /// <summary>
+        /// The user of this object - can be null if the requester doesn't have permission to view object ownership information.
+        /// </summary>
         public User Owner { get; set; }
     }
 }

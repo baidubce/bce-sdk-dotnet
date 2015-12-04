@@ -15,9 +15,18 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Request object containing all the options for setting a bucket's Access Control List (ACL).
+    /// </summary>
     public class SetBucketAclRequest : BucketRequestBase
     {
+        /// <summary>
+        /// The canned ACL to apply to the specified bucket.
+        /// </summary>
         public String CannedAcl { get; set; }
+        /// <summary>
+        /// The accessControlList of this specified bucket.
+        /// </summary>
         public List<Grant> AccessControlList { get; set; }
     }
 }

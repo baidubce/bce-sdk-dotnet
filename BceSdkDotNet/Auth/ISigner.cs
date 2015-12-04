@@ -15,8 +15,16 @@ using BaiduBce.Internal;
 
 namespace BaiduBce.Auth
 {
+    /// <summary>
+    /// A strategy for applying cryptographic signatures to a request, proving that the request was made by someone in
+    /// possession of the given set of credentials without transmitting the secret key over the wire.
+    /// </summary>
     public interface ISigner
     {
+        /// <summary>
+        /// Sign the given request. Modifies the passed-in request to apply the signature.
+        /// </summary>
+        /// <param name="request">     the request to sign. </param>
         string Sign(InternalRequest request);
     }
 }

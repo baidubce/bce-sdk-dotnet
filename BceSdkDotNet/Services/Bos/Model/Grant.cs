@@ -16,9 +16,19 @@ using System.Text;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Specifies a grant, consisting of one grantee and one permission.
+    /// </summary>
     public class Grant
     {
+        /// <summary>
+        /// The grantee being granted a permission by this grant.
+        /// </summary>
         public List<Grantee> Grantee { get; set; }
+
+        /// <summary>
+        /// Gets the permission being granted to the grantee by this grant.
+        /// </summary>
         public List<String> Permission { get; set; }
     }
 }

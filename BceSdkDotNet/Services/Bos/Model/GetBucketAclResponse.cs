@@ -18,16 +18,19 @@ namespace BaiduBce.Services.Bos.Model
     {
         public const int MaxSupportedAclVersion = 1;
 
+        /// <summary>
+        /// The acl version..
+        /// </summary>
         public int Version { get; set; }
 
-        /**
-         * The user of this specified bucket.
-         */
+        /// <summary>
+        /// The user of this specified bucket.
+        /// </summary>
         public Grantee Owner { get; set; }
 
-        /**
-         * The accessControlList of this specified bucket.
-         */
+        /// <summary>
+        /// The accessControlList of this specified bucket.
+        /// </summary>
         public List<Grant> AccessControlList { get; set; }
     }
 }

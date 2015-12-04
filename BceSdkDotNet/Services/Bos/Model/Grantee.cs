@@ -16,8 +16,14 @@ using System.Text;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Represents the grantee of an Baidu Bos bucket.
+    /// </summary>
     public class Grantee
     {
+        /// <summary>
+        /// The ID of the grantee.
+        /// </summary>
         public string Id { get; set; }
     }
 }

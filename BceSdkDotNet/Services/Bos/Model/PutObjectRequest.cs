@@ -17,10 +17,36 @@ using System.IO;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Uploads a new object to the specified Baidu Bos bucket. The PutObjectRequest optionally uploads object metadata
+    /// and applies a canned access control policy to the new object.
+    /// 
+    /// <para>
+    /// Baidu Bos never stores partial objects; if during this call an exception wasn't thrown, the entire object was stored.
+    /// </para>
+    /// </summary>
     public class PutObjectRequest : ObjectRequestBase
     {
+        /// <summary>
+        /// The file containing the data to be uploaded to Baidu Bos. You must either
+        /// specify a file or an InputStream containing the data to be uploaded to
+        /// Baidu Bos.
+        /// </summary>
         public FileInfo FileInfo { get; set; }
+        /// <summary>
+        /// The InputStream containing the data to be uploaded to Baidu Bos. You must
+        /// either specify a file or an InputStream containing the data to be
+        /// uploaded to Baidu Bos.
+        /// </summary>
         public Stream Stream { get; set; }
+        /// <summary>
+        /// Optional metadata instructing Baidu Bos how to handle the uploaded data
+        /// (e.g. custom user metadata, hooks for specifying content type, etc.). If
+        /// you are uploading from an InputStream, you <bold>should always</bold>
+        /// specify metadata with the content size set, otherwise the contents of the
+        /// InputStream will have to be buffered in memory before they can be sent to
+        /// Baidu Bos, which can have very negative performance impacts.
+        /// </summary>
         public ObjectMetadata ObjectMetadata { get; set; }
 
         public PutObjectRequest()

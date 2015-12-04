@@ -17,6 +17,11 @@ using BaiduBce.Model;
 
 namespace BaiduBce
 {
+    /// <summary>
+    /// Retry policy that can be configured on a specific service client using <seealso cref="BceClientConfiguration"/>. This class is
+    /// immutable, therefore safe to be shared by multiple clients.
+    /// </summary>
+    /// <seealso cref= "BceClientConfiguration"/>
     public class DefaultRetryPolicy : IRetryPolicy
     {
         private static readonly ILog log = LogManager.GetLogger(typeof (DefaultRetryPolicy));
@@ -27,14 +32,26 @@ namespace BaiduBce
 
         public const int DefaultScaleFactorInMillis = 300;
 
+        /// <summary>
+        /// Non-negative integer indicating the max retry count.
+        /// </summary>
         public int MaxErrorRetry { get; set; }
 
+        /// <summary>
+        /// Max delay time in millis.
+        /// </summary>
         public int MaxDelayInMillis { get; set; }
 
+        /// <summary>
+        /// Base sleep time (milliseconds) for general exceptions. *
+        /// </summary>
         public int ScaleFactorInMillis { get; set; }
 
         public bool CanRetry { get; set; }
 
+        /// <summary>
+        /// Constructs a new DefaultRetryPolicy.
+        /// </summary>
         public DefaultRetryPolicy()
         {
             this.MaxErrorRetry = DefaultMaxErrorRetry;
@@ -72,6 +89,15 @@ namespace BaiduBce
             }
         }
 
+        /// <summary>
+        /// Returns the delay (in milliseconds) before next retry attempt. A negative value indicates that no more retries
+        /// should be made.
+        /// </summary>
+        /// <param name="exception">        the exception from the failed request, represented as an BceClientException object. </param>
+        /// <param name="attempt"> the number of times the current request has been attempted
+        ///         (not including the next attempt after the delay). </param>
+        /// <returns> the delay (in milliseconds) before next retry attempt.A negative value indicates that no more retries
+        ///         should be made. </returns>
         protected virtual int GetDelayBeforeNextRetryInMillis(Exception exception, int attempt)
         {
             int retriesAttempted = attempt - 1;
@@ -92,6 +118,18 @@ namespace BaiduBce
             return Math.Min(this.MaxDelayInMillis, (1 << (retriesAttempted + 1)) * this.ScaleFactorInMillis);
         }
 
+        /// <summary>
+        /// Returns whether a failed request should be retried according to the given request context. In the following
+        /// circumstances, the request will fail directly without consulting this method:
+        /// <ul>
+        /// <li>if it has already reached the max retry limit,
+        /// <li>if the request contains non-repeatable content,
+        /// <li>if any RuntimeException or Error is thrown when executing the request.
+        /// </ul>
+        /// </summary>
+        /// <param name="exception">        the exception from the failed request, represented as a BceClientException object. </param>
+        /// <param name="retriesAttempted"> the number of times the current request has been attempted. </param>
+        /// <returns> true if the failed request should be retried. </returns>
         protected virtual bool ShouldRetry(Exception exception, int retriesAttempted)
         {
             // Don't retry if stream can not seek.

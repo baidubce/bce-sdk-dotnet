@@ -13,6 +13,13 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Provides options for copying an Baidu Bos object from a source location to a new destination.
+    /// 
+    /// <para>
+    /// All <code>CopyObjectRequests</code> must specify a source bucket and key, along with a destination bucket and key.
+    /// </para>
+    /// </summary>
     public class CopyObjectRequest : ObjectRequestBase
     {
         /// <summary>

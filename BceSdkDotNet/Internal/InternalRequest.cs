@@ -17,18 +17,39 @@ using BaiduBce.Http;
 
 namespace BaiduBce.Internal
 {
+
+    /// <summary>
+    /// Represents a request being sent to a BCE Service, including the
+    /// parameters being sent as part of the request, the endpoint to which the
+    /// request should be sent, etc.
+    /// </summary>
     public class InternalRequest
     {
         private Stream stream;
 
+        /// <summary>
+        /// Map of the parameters being sent as part of this request.
+        /// </summary>
         public IDictionary<string, string> Parameters { get; set; }
 
+        /// <summary>
+        /// Map of the headers included in this request
+        /// </summary>
         public IDictionary<string, string> Headers { get; set; }
 
+        /// <summary>
+        /// The service endpoint to which this request should be sent
+        /// </summary>
         public Uri Uri { get; set; }
 
+        /// <summary>
+        /// The HTTP method to use when sending this request.
+        /// </summary>
         public string HttpMethod { get; set; }
 
+        /// <summary>
+        /// An optional stream from which to read the request payload.
+        /// </summary>
         public Stream Content
         {
             get
@@ -43,7 +64,7 @@ namespace BaiduBce.Internal
         }
 
         /// <summary>
-        /// 记录Stream的初始位置，用于重试时重置Stream的Position
+        /// The start position of the Content Stream
         /// </summary>
         public long StartPosition { get; set; }
 

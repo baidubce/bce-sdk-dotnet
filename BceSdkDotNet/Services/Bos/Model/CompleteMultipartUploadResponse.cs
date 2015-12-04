@@ -11,11 +11,27 @@
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// The CompleteMultipartUploadResponse contains all the information about the CompleteMultipartUpload method.
+    /// </summary>
     public class CompleteMultipartUploadResponse : BosResponseBase
     {
+        /// <summary>
+        /// The name of the bucket containing the completed multipart upload.
+        /// </summary>
         public string BucketName { get; set; }
+        /// <summary>
+        /// The key by which the object is stored.
+        /// </summary>
         public string Key { get; set; }
+        /// <summary>
+        /// The URL identifying the new multipart object.
+        /// </summary>
         public string Location { get; set; }
+        /// <summary>
+        /// The entity tag identifying the new object. An entity tag is an opaque
+        /// string that changes if and only if an object's data changes.
+        /// </summary>
         public string ETag { get; set; }
     }
 }

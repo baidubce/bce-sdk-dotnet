@@ -16,9 +16,19 @@ using System.Text;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Container for the part number and ETag of an uploaded part. After the part is
+    /// uploaded to Baidu Bos, this data is used when completing the multipart upload.
+    /// </summary>
     public class PartETag
     {
+        /// <summary>
+        /// The part number of the associated part.
+        /// </summary>
         public int PartNumber { get; set; }
+        /// <summary>
+        /// The entity tag generated from the content of the associated part.
+        /// </summary>
         public string ETag { get; set; }
     }
 }

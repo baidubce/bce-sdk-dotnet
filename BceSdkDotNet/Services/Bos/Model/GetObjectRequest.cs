@@ -16,10 +16,42 @@ using System.Text;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Provides options for downloading an Baidu Bos object.
+    /// 
+    /// <para>
+    /// All <code>GetObjectRequests</code> must specify a bucket name and key.
+    /// </para>
+    /// Beyond that, requests can also specify: * <para>
+    /// </para>
+    ///  <para>
+    /// <ul>
+    ///   <li>The range of bytes within the object to download,
+    /// </ul>
+    /// </para>
+    /// </summary>
     public class GetObjectRequest : ObjectRequestBase
     {
+        /// <summary>
+        /// Optional member indicating the byte range of data to retrieve
+        /// </summary>
         public long[] Range { get; set; }
 
+        /// <summary>
+        /// Sets the optional inclusive byte range within the desired object that will be downloaded by this request.
+        /// 
+        /// <para>
+        /// The first byte in an object has  position 0; as an example, the first ten bytes of an object can be
+        /// downloaded by specifying a range of 0 to 9.
+        /// 
+        /// </para>
+        /// <para>
+        /// If no byte range is specified, this request downloads the entire object from Baidu Bos.
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="start"> The start of the inclusive byte range to download. </param>
+        /// <param name="end"> The end of the inclusive byte range to download. </param>
         public void SetRange(long start, long end)
         {
             if (start < 0)

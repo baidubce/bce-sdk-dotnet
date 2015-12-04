@@ -11,13 +11,23 @@
 
 using System;
 using System.Collections.Generic;
-using BaiduBce.Model;
+using BaiduBce.Model; 
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Contains the details returned from Baidu Bos after calling the UploadPart
+    /// operation.
+    /// </summary>
     public class UploadPartResponse : BosResponseBase
     {
+        /// <summary>
+        /// The part number of the newly uploaded part
+        /// </summary>
         public int PartNumber { get; set; }
+        /// <summary>
+        /// The entity tag generated from the content of the upload part
+        /// </summary>
         public string ETag { get; set; }
     }
 }

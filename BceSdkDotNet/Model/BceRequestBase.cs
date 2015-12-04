@@ -14,8 +14,14 @@ using BaiduBce.Auth;
 
 namespace BaiduBce.Model
 {
+    /// <summary>
+    /// Base class for all BCE web service request objects.
+    /// </summary>
     public class BceRequestBase
     {
+        /// <summary>
+        /// The optional config to use for this request - overrides the default config set at the client level.
+        /// </summary>
         public BceClientConfiguration Config { get; set; }
     }
 }

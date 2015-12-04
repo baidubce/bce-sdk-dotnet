@@ -17,11 +17,27 @@ using System.IO;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Represents an object stored in Baidu Bos. This object contains the data content
+    /// and the object metadata stored by Baidu Bos, such as content type, content length, etc.
+    /// </summary>
     public class BosObject
     {
+        /// <summary>
+        /// The name of the bucket in which this object is contained.
+        /// </summary>
         public string BucketName { get; set; }
+        /// <summary>
+        /// The key under which this object is stored.
+        /// </summary>
         public string Key { get; set; }
+        /// <summary>
+        /// The metadata stored by Baidu Bos for this object.
+        /// </summary>
         public ObjectMetadata ObjectMetadata { get; set; }
+        /// <summary>
+        /// The stream containing the contents of this object from Bos.
+        /// </summary>
         public Stream ObjectContent { get; set; }
     }
 }

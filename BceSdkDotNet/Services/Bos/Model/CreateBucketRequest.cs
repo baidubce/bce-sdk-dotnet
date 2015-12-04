@@ -13,6 +13,9 @@ using System;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Provides options for creating an Baidu Bos bucket.
+    /// </summary>
     public class CreateBucketRequest : BucketRequestBase
     {
     }

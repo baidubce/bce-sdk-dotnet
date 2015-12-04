@@ -15,9 +15,21 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Contains the data returned by Baidu Bos from the
+    /// <seealso cref="BaiduBce.Services.Bos.BosClient#copyObject(CopyObjectRequest copyObjectRequest)"/> call.
+    /// This result may be ignored if not needed; otherwise, use this result
+    /// to access information about the new object created from the copyObject call.
+    /// </summary>
     public class CopyObjectResponse : BosResponseBase
     {
+        /// <summary>
+        /// The ETag value of the new object.
+        /// </summary>
         public String ETag { get; set; }
+        /// <summary>
+        /// The last modified date for the new object.
+        /// </summary>
         public DateTime LastModified { get; set; }
     }
 }

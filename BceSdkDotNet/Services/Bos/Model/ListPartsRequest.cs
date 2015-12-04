@@ -11,9 +11,22 @@
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Container for the the parameters of the ListParts operation.
+    /// 
+    /// <para>
+    /// Required Parameters: BucketName, Key, UploadId
+    /// </para>
+    /// </summary>
     public class ListPartsRequest : UploadRequestBase
     {
+        /// <summary>
+        /// The optional maximum number of parts to be returned in the part listing.
+        /// </summary>
         public int? MaxParts { get; set; }
+        /// <summary>
+        /// The optional part number marker indicating where in the results to being listing parts.
+        /// </summary>
         public int PartNumberMarker { get; set; }
     }
 }

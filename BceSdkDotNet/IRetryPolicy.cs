@@ -14,9 +14,22 @@ using BaiduBce.Model;
 
 namespace BaiduBce
 {
+    /// <summary>
+    /// Retry policy that can be configured on a specific service client using <seealso cref="BceClientConfiguration"/>.
+    /// </summary>
     public interface IRetryPolicy
     {
+        /// <summary>
+        /// execute the func with the retry policy
+        /// </summary>
+        /// <typeparam name="T">return type of the func</typeparam>
+        /// <param name="func">the func to be executed</param>
+        /// <returns></returns>
         T Execute<T>(Func<int, T> func);
+
+        /// <summary>
+        /// determine if can retry
+        /// </summary>
         bool CanRetry { get; set; }
     }
 }

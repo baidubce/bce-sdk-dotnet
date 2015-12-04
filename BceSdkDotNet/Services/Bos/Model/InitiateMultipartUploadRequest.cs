@@ -13,8 +13,19 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// The InitiateMultipartUploadRequest contains the parameters used for the InitiateMultipartUpload method.
+    /// 
+    /// <para>
+    /// Required Parameters: BucketName, Key
+    /// </para>
+    /// </summary>
     public class InitiateMultipartUploadRequest : ObjectRequestBase
     {
+        /// <summary>
+        /// Additional information about the new object being created, such as
+        /// content type, content encoding, user metadata, etc.
+        /// </summary>
         public ObjectMetadata ObjectMetadata { get; set; }
 
         public InitiateMultipartUploadRequest()

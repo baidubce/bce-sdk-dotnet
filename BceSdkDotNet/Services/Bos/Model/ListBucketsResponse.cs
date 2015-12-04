@@ -15,9 +15,18 @@ using BaiduBce.Model;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Response object for listing all the Baidu Bos buckets owned by a user.
+    /// </summary>
     public class ListBucketsResponse : BosResponseBase
     {
+        /// <summary>
+        /// The owner of this bucket.
+        /// </summary>
         public User Owner { get; set; }
+        /// <summary>
+        /// The list of buckets owned by a user.
+        /// </summary>
         public List<BucketSummary> Buckets { get; set; }
     }
 }

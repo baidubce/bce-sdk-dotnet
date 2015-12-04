@@ -10,24 +10,66 @@ using System.Net;
 
 namespace BaiduBce
 {
+    /// <summary>
+    /// Basic client configurations for BCE clients.
+    /// </summary>
     public class BceClientConfiguration
     {
+        /// <summary>
+        /// The default timeout for creating new connections.
+        /// </summary>
         public const int DefaultTimeoutInMillis = 50 * 1000;
+
+        /// <summary>
+        /// The default timeout for reading from a connected socket.
+        /// </summary>
         public const int DefaultReadWriteTimeoutInMillis = 50 * 1000;
+
+        /// <summary>
+        /// The default socket buffer size.
+        /// </summary>
         public const int DefaultSocketBufferSizeInBytes = 8192;
+
+        /// <summary>
+        /// The default Signer.
+        /// </summary>
         public static readonly ISigner DefaultSigner = new BceV1Signer();
+
+        /// <summary>
+        /// The default UserAgent.
+        /// </summary>
         private static readonly string DefaultUserAgent = BceClientConfiguration.GenerateDefaultUserAgent();
 
+        /// <summary>
+        /// The BCE credentials used by the client to sign HTTP requests.
+        /// </summary>
         public IBceCredentials Credentials { get; set; }
 
+        /// <summary>
+        /// The region of service. This value is used by the client to construct the endpoint URL automatically, and is
+        /// ignored if endpoint is not null.
+        /// </summary>
         public string Region { get; set; }
 
+        /// <summary>
+        /// The service endpoint URL to which the client will connect.
+        /// </summary>
         public string Endpoint { get; set; }
 
+        /// <summary>
+        /// The protocol (HTTP/HTTPS) to use when connecting to BCE services.
+        /// </summary>
         public string Protocol { get; set; }
 
+        /// <summary>
+        /// The connection timeout in milliseconds. A value of -1 means infinity, and is not recommended.
+        /// </summary>
         public int? TimeoutInMillis { get; set; }
 
+        /// <summary>
+        /// The socket timeout (SO_TIMEOUT) in milliseconds, which is a maximum period inactivity between two consecutive
+        /// data packets. A value of -1 means infinity, and is not recommended.
+        /// </summary>
         public int? ReadWriteTimeoutInMillis { get; set; }
 
         public string ProxyHost { get; set; }
@@ -40,14 +82,24 @@ namespace BaiduBce
 
         public int? MaxIdleTimeInMillis { get; set; }
 
+        /// <summary>
+        /// The maximum number of open HTTP connections.
+        /// </summary>
         public int? ConnectionLimit { get; set; }
 
+        /// <summary>
+        /// The optional size (in bytes) for the low level TCP socket buffer. This is an advanced option for advanced users
+        /// who want to tune low level TCP parameters to try and squeeze out more performance. Ignored if not positive.
+        /// </summary>
         public int? SocketBufferSizeInBytes { get; set; }
 
         public ISigner Signer { get; set; }
 
         public SignOptions SignOptions { get; set; }
 
+        /// <summary>
+        /// The retry policy for failed requests.
+        /// </summary>
         public IRetryPolicy RetryPolicy { get; set; }
 
         public string UserAgent

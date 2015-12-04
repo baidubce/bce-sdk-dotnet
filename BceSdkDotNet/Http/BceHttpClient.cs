@@ -28,6 +28,13 @@ namespace BaiduBce.Http
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(BceHttpClient));
 
+        /// <summary>
+        /// Executes the request and returns the result.
+        /// </summary>
+        /// <param name="request">          The BCE request to send to the remote server </param>
+        /// <exception cref="BaiduBce.BceClientException">  If any errors are encountered on the client while making the
+        ///             request or handling the response. </exception>
+        /// <exception cref="BaiduBce.BceServiceException"> If any errors occurred in BCE while processing the request. </exception>
         public HttpWebResponse Execute(InternalRequest request)
         {
             BceClientConfiguration config = request.Config;
@@ -95,6 +102,12 @@ namespace BaiduBce.Http
             }
         }
 
+        /// <summary>
+        /// Creates HttpClient method object based on the specified request and
+        /// populates any parameters, headers, etc. from the internal request.
+        /// </summary>
+        /// <param name="request"> The request to convert to an HttpClient method object. </param>
+        /// <returns> The converted HttpClient method object with any parameters, headers, etc. from the original request set. </returns>
         private static HttpWebRequest CreateHttpWebRequest(InternalRequest request)
         {
             BceClientConfiguration config = request.Config;

@@ -13,8 +13,16 @@ using System;
 
 namespace BaiduBce.Model
 {
+    /// <summary>
+    /// Represents the response from an BCE service, including the result payload and any response metadata. BCE response
+    /// metadata consists primarily of the BCE request ID, which can be used for debugging purposes when services aren't
+    /// acting as expected.
+    /// </summary>
     public class BceResponseBase
     {
+        /// <summary>
+        /// The request id returned by bce service.
+        /// </summary>
         public String BceRequestId { get; set; }
     }
 }

@@ -13,6 +13,19 @@ using System;
 
 namespace BaiduBce
 {
+    /// <summary>
+    /// Base exception class for any errors that occur on the client side when attempting to access a BCE service API.
+    /// 
+    /// <para>
+    /// For example, there is no network connection available or the network request is timeout, or the server returns an
+    /// invalid response that the client is unable to parse, etc
+    /// 
+    /// </para>
+    /// <para>
+    /// Error responses from services will be handled as BceServiceExceptions.
+    /// 
+    /// </para>
+    /// </summary>
     public class BceClientException : BceBaseException
     {
         public BceClientException()

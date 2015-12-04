@@ -13,6 +13,9 @@ using System;
 
 namespace BaiduBce
 {
+    /// <summary>
+    /// Common constants used by the whole SDK.
+    /// </summary>
     public static class BceConstants
     {
         public static class Region

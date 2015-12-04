@@ -13,6 +13,9 @@ using System;
 
 namespace BaiduBce.Services.Bos.Model
 {
+    /// <summary>
+    /// Provides options for deleting a specified bucket. Baidu Bos buckets can only be deleted when empty.
+    /// </summary>
     public class DeleteBucketRequest : BucketRequestBase
     {
     }
