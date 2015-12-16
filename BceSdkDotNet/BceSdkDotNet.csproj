@@ -73,6 +73,7 @@
     <Compile Include="Services\Bos\Model\BosObject.cs" />
     <Compile Include="Services\Bos\Model\BosObjectSummary.cs" />
     <Compile Include="Services\Bos\Model\BosResponseBase.cs" />
+    <Compile Include="Services\Bos\Model\GetBucketLocationResponse.cs" />
     <Compile Include="Services\Bos\Model\GetBucketAclResponse.cs" />
     <Compile Include="Services\Bos\Model\MultipartUploadSummary.cs" />
     <Compile Include="Services\Bos\Model\ListMultipartUploadsRequest.cs" />

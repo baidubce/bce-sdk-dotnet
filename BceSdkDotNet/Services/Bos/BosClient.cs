@@ -364,6 +364,48 @@ namespace BaiduBce.Services.Bos
         }
 
         /// <summary>
+        /// Gets the Location for the specified Bos bucket.
+        /// 
+        /// <para>
+        /// Each bucket and object in Bos has an Location that defines its location
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="bucketName"> The name of the bucket whose Location is being retrieved. </param>
+        /// <returns> The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket. </returns>
+        public GetBucketLocationResponse GetBucketLocation(string bucketName)
+        {
+            return this.GetBucketLocation(new BucketRequestBase() {BucketName = bucketName});
+        }
+
+        /// <summary>
+        /// Gets the Location for the specified Bos bucket.
+        /// 
+        /// <para>
+        /// Each bucket and object in Bos has an Location that defines its location
+        /// 
+        /// </para>
+        /// </summary>
+        /// <param name="request"> The request containing the name of the bucket whose Location is being retrieved. </param>
+        /// <returns> The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket. </returns>
+        public GetBucketLocationResponse GetBucketLocation(BucketRequestBase request)
+        {
+            CheckNotNull(request, "request should not be null.");
+
+            InternalRequest internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Get, request);
+            internalRequest.Parameters["location"] = null;
+
+            return internalRequest.Config.RetryPolicy.Execute(attempt =>
+            {
+                var httpWebResponse = this.httpClient.Execute(internalRequest);
+                using (httpWebResponse)
+                {
+                    return ToObject<GetBucketLocationResponse>(httpWebResponse);
+                }
+            });
+        }
+
+        /// <summary>
         /// Returns a pre-signed URL for accessing a Bos resource.
         /// </summary>
         /// <param name="bucketName"> The name of the bucket containing the desired object. </param>
@@ -412,7 +454,10 @@ namespace BaiduBce.Services.Bos
             CheckNotNull(request, "The request parameter must be specified when generating a pre-signed URL");
 
             string httpMethod = request.Method;
-
+            if (!BceConstants.HttpMethod.Get.Equals(httpMethod, StringComparison.CurrentCultureIgnoreCase))
+            {
+                throw new ArgumentException("only support http method get");
+            }
             // If the key starts with a slash character itself, the following method
             // will actually add another slash before the resource path to prevent
             // the HttpClient mistakenly treating the slash as a path delimiter.
@@ -753,10 +798,10 @@ namespace BaiduBce.Services.Bos
             }
 
             internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = metadata.ContentLength.ToString();
-            PopulateRequestMetadata(internalRequest, metadata);
-
+            
             using (internalRequest.Content)
             {
+                PopulateRequestMetadata(internalRequest, metadata);
                 internalRequest.Config.RetryPolicy.CanRetry = internalRequest.Content.CanSeek;
                 return internalRequest.Config.RetryPolicy.Execute<PutObjectResponse>(attempt =>
                 {
@@ -967,11 +1012,8 @@ namespace BaiduBce.Services.Bos
         public CopyObjectResponse CopyObject(CopyObjectRequest request)
         {
             CheckNotNull(request, "request should not be null.");
-            if (string.IsNullOrEmpty(request.SourceKey))
-            {
-                throw new ArgumentNullException("object key should not be null or empty");
-            }
-
+            CheckNotNull(request.SourceBucketName, "source bucket should not be null or empty");
+            CheckNotNull(request.SourceKey, "source object key should not be null or empty");
             InternalRequest internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Put, request);
             string copySourceHeader = "/" + request.SourceBucketName + "/" + request.SourceKey;
             copySourceHeader = HttpUtils.NormalizePath(copySourceHeader);
@@ -1477,10 +1519,6 @@ namespace BaiduBce.Services.Bos
                     if (value == null)
                     {
                         value = "";
-                    }
-                    if (key.Length + value.Length > 1024 * 32)
-                    {
-                        throw new BceClientException("MetadataTooLarge");
                     }
                     string userMetaKey = BceConstants.HttpHeaders.BceUserMetadataPrefix +
                                          HttpUtils.Normalize(key.Trim());

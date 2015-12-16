@@ -2,12 +2,17 @@
 
 echo == %DATE% %TIME% ==
 set OutputFolderBase=output
+set SampleFolder=%OutputFolderBase%\samples
+set Version=0.1.0
 
 if exist %OutputFolderBase% (
     rmdir /s /q %OutputFolderBase%
 )
 if not exist %OutputFolderBase% ( 
     md %OutputFolderBase%
+)
+if not exist %SampleFolder% ( 
+    md %SampleFolder%
 )
 
 echo == %DATE% %TIME% ==
@@ -22,6 +27,10 @@ echo Compile Sources for Release...
 msbuild BceSdkDotNet.sln /t:Clean;Rebuild /m:4 /p:Configuration=Release > x86.release.compile.log
 xcopy /E /Y BceSdkDotNet\bin\Release\*.* %OutputFolderBase%
 echo ******************* Build Release Done! ********************
+
+:: zip package
+xcopy samples\*.* %SampleFolder%
+7z a %OutputFolderBase%\bce-dotnet-sdk-%Version%.zip .\%OutputFolderBase%\*
 
 @echo on
 exit

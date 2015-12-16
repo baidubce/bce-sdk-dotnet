@@ -128,6 +128,13 @@ namespace BaiduBce.UnitTest.Services.Bos
                 Assert.IsTrue(this.client.DoesBucketExist(this.bucketName));
                 Assert.IsFalse(this.client.DoesBucketExist("xxxaaa"));
             }
+
+            [TestMethod]
+            public void TestGetBucketLocation()
+            {
+                GetBucketLocationResponse getBucketLocationResponse = this.client.GetBucketLocation(this.bucketName);
+                Assert.AreEqual(getBucketLocationResponse.LocationConstraint, "bj");
+            }
         }
 
         [TestClass]

@@ -33,9 +33,15 @@ namespace BaiduBce.Services.Bos.Model
         /// The name of this Baidu Bos bucket.
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// The date this bucket was created.
         /// </summary>
         public DateTime CreationDate { get; set; }
+
+        /// <summary>
+        /// The location of this Baidu Bos bucket.
+        /// </summary>
+        public string Location { get; set; }
     }
 }

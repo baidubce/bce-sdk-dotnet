@@ -16,6 +16,25 @@ namespace BaiduBce.Services.Bos.Model
 {
     public class ObjectRequestBase : BucketRequestBase
     {
-        public string Key { get; set; }
+        private const int MaxObjectKeyLength = 1024;
+
+        private string _key;
+
+        public string Key
+        {
+            get { return _key; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentNullException("object key should not be null or empty");
+                }
+                if (value.Length > MaxObjectKeyLength)
+                {
+                    throw new ArgumentException("objectKey should not be greater than " + MaxObjectKeyLength + ".");
+                }
+                _key = value;
+            }
+        }
     }
 }
