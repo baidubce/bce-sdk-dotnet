@@ -30,7 +30,7 @@ echo ******************* Build Release Done! ********************
 
 :: zip package
 xcopy samples\*.* %SampleFolder%
-7z a %OutputFolderBase%\bce-dotnet-sdk-%Version%.zip .\%OutputFolderBase%\*
-
+7za a %OutputFolderBase%\bce-dotnet-sdk-%Version%.zip .\%OutputFolderBase%\*
+pause
 @echo on
 exit
