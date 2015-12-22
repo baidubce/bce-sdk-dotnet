@@ -2,8 +2,17 @@
 
 echo == %DATE% %TIME% ==
 set OutputFolderBase=output
-set SampleFolder=%OutputFolderBase%\samples
-set Version=0.1.0
+set OutputFolderTempBase=outputtemp
+set SampleFolder=%OutputFolderTempBase%\samples
+set ThirdPartyFolder=%OutputFolderTempBase%\thirdparty
+set Version=1.0.1
+
+if exist %OutputFolderTempBase% (
+    rmdir /s /q %OutputFolderTempBase%
+)
+if not exist %OutputFolderTempBase% ( 
+    md %OutputFolderTempBase%
+)
 
 if exist %OutputFolderBase% (
     rmdir /s /q %OutputFolderBase%
@@ -11,8 +20,13 @@ if exist %OutputFolderBase% (
 if not exist %OutputFolderBase% ( 
     md %OutputFolderBase%
 )
+
 if not exist %SampleFolder% ( 
     md %SampleFolder%
+)
+
+if not exist %ThirdPartyFolder% ( 
+    md %ThirdPartyFolder%
 )
 
 echo == %DATE% %TIME% ==
@@ -25,12 +39,18 @@ set PATH=C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;%PATH%
 echo == %DATE% %TIME% ==
 echo Compile Sources for Release...
 msbuild BceSdkDotNet.sln /t:Clean;Rebuild /m:4 /p:Configuration=Release > x86.release.compile.log
-xcopy /E /Y BceSdkDotNet\bin\Release\*.* %OutputFolderBase%
+xcopy /E /Y BceSdkDotNet\bin\Release\BceSdkDotNet.dll %OutputFolderTempBase%
+xcopy /E /Y BceSdkDotNet\bin\Release\BceSdkDotNet.XML %OutputFolderTempBase%
+xcopy /E /Y BceSdkDotNet\bin\Release\Newtonsoft.Json.* %ThirdPartyFolder%
+xcopy /E /Y BceSdkDotNet\bin\Release\log4net.* %ThirdPartyFolder%
 echo ******************* Build Release Done! ********************
 
 :: zip package
 xcopy samples\*.* %SampleFolder%
-7za a %OutputFolderBase%\bce-dotnet-sdk-%Version%.zip .\%OutputFolderBase%\*
+copy CHANGELOG.md %OutputFolderTempBase%
+copy README.md %OutputFolderTempBase%
+7za a %OutputFolderTempBase%\bce-dotnet-sdk-%Version%.zip .\%OutputFolderTempBase%\*
+copy %OutputFolderTempBase%\bce-dotnet-sdk-%Version%.zip %OutputFolderBase%\bce-dotnet-sdk-%Version%.zip
 pause
 @echo on
 exit

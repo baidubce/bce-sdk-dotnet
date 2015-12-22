@@ -15,7 +15,7 @@ namespace DotnetSample
         private static void Main(string[] args)
         {
             BosClient client = GenerateBosClient();
-            const string bucketName = "sample-bucket-putobject"; //示例Bucket名称
+            const string bucketName = "sample-bucket-putobject993"; //示例Bucket名称
             const string objectNameFile = "sample-bucket-putobject-file"; //file上传的object名称
             const string objectNameStream = "sample-bucket-putobject-stream"; //stream上传的object名称
             const string objectNameString = "sample-bucket-putobject-string"; //string上传的object名称
@@ -25,7 +25,7 @@ namespace DotnetSample
             client.CreateBucket(bucketName); //指定Bucket名称
 
             // 设置待上传的文件名，例如d:\\sample.txt
-            const string fileName = "my file path and name";
+            const string fileName = "your file and path";
 
             // 以文件形式上传Object
             PutObjectResponse putObjectFromFileResponse = client.PutObject(bucketName, objectNameFile,
@@ -44,6 +44,18 @@ namespace DotnetSample
             Console.WriteLine(putObjectFromFileResponse.ETAG);
             Console.WriteLine(putObjectResponseFromInputStream.ETAG);
             Console.WriteLine(putObjectResponseFromByte.ETAG);
+            Console.WriteLine(putObjectResponseFromString.ETAG);
+
+            // 上传Object并设置自定义参数
+            ObjectMetadata meta = new ObjectMetadata();
+            // 设置ContentLength大小
+            meta.ContentLength = 10;
+            // 设置ContentType
+            meta.ContentType = "application/json";
+            // 设置自定义元数据name的值为my-data
+            meta.UserMetadata["name"] = "my-data";
+            // 上传Object并打印ETag
+            putObjectResponseFromString = client.PutObject(bucketName, objectNameString, "sampledata", meta);
             Console.WriteLine(putObjectResponseFromString.ETAG);
         }
 

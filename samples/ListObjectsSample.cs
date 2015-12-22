@@ -27,7 +27,7 @@ namespace DotnetSample
             client.PutObject(bucketName, "fun/movie/007.avi", "sampledata");
 
             // 构造ListObjectsRequest请求
-            ListObjectsRequest listObjectsRequest = new ListObjectsRequest() { BucketName = bucketName };
+            ListObjectsRequest listObjectsRequest = new ListObjectsRequest() {BucketName = bucketName};
 
             // 1. 列出所有文件
             ListObjectsResponse listObjectsResponse = client.ListObjects(listObjectsRequest);
@@ -45,7 +45,33 @@ namespace DotnetSample
                 Console.WriteLine("ObjectKey: " + objectSummary.Key);
             }
 
-            // 2. 递归列出fun/下所有目录和文件
+            // 2. 使用NextMarker分次列出所有文件
+            listObjectsRequest.MaxKeys = 2;
+            listObjectsResponse = client.ListObjects(listObjectsRequest);
+
+            // 输出：    
+            // Objects:
+            // bos.jpg
+            // fun/
+            // fun/movie/001.avi
+            // fun/movie/007.avi
+            // fun/test.jpg
+            Console.WriteLine("Objects:");
+            while (listObjectsResponse.IsTruncated)
+            {
+                foreach (BosObjectSummary objectSummary in listObjectsResponse.Contents)
+                {
+                    Console.WriteLine("ObjectKey: " + objectSummary.Key);
+                }
+                listObjectsResponse = client.ListNextBatchOfObjects(listObjectsResponse);
+            }
+            foreach (BosObjectSummary objectSummary in listObjectsResponse.Contents)
+            {
+                Console.WriteLine("ObjectKey: " + objectSummary.Key);
+            }
+
+            // 3. 递归列出fun/下所有目录和文件
+            listObjectsRequest.MaxKeys = 1000;
             listObjectsRequest.Prefix = "fun/";
             listObjectsResponse = client.ListObjects(listObjectsRequest);
 
@@ -61,7 +87,7 @@ namespace DotnetSample
                 Console.WriteLine("ObjectKey: " + objectSummary.Key);
             }
 
-            // 3. 列出fun目录下的所有文件和文件夹
+            // 4. 列出fun目录下的所有文件和文件夹
             listObjectsRequest.Delimiter = "/";
             listObjectsResponse = client.ListObjects(listObjectsRequest);
 
@@ -84,7 +110,6 @@ namespace DotnetSample
             {
                 Console.WriteLine(objectPrefix.Prefix);
             }
-            Console.ReadKey();
         }
 
         private static BosClient GenerateBosClient()
