@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using BaiduBce.Auth;
 using System.Net;
+using System.Reflection;
 
 namespace BaiduBce
 {
@@ -269,11 +270,14 @@ namespace BaiduBce
             }
             string runtimeVersion = string.Format(
                 CultureInfo.InvariantCulture, "{0}.{1}", Environment.Version.Major, Environment.Version.MajorRevision);
-            Regex regex = new Regex(@"\s+");
-            return string.Format("Framework:{0}  Runtime:{1}  OS:{2}",
-                regex.Replace(GetFrameworkVersion(), " "),
-                regex.Replace(runtimeVersion, " "),
-                regex.Replace(osVersion, " "));
+            string userAgent = string.Format("bce-sdk-dotnet/{0}/Framework:{1}/Runtime:{2}/OS:{3}",
+                Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                GetFrameworkVersion(),
+                runtimeVersion,
+                osVersion);
+
+            // Space is evil, avoid it
+            return new Regex(@"\s+").Replace(userAgent, "_");
         }
 
         // see https://msdn.microsoft.com/en-us/library/hh925568(v=vs.110).aspx
