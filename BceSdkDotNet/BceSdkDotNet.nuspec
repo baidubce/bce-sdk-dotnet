@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>BaiduBce</authors>
+    <owners>BaiduBce</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://bce.baidu.com/doc/SDKTool/index.html</projectUrl>
+    <iconUrl>https://bce.baidu.com/img/logo2x.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright © Baidu.com, Inc. 2015</copyright>
+    <tags>BaiduBce Baidu cloud</tags>
+  </metadata>
+</package>

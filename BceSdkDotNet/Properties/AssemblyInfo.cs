@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("BceSdkDotNet")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("BCE SDK for .NET")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Baidu.com, Inc.")]
 [assembly: AssemblyProduct("BceSdkDotNet")]
