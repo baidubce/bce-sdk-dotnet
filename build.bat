@@ -5,7 +5,7 @@ set OutputFolderBase=output
 set OutputFolderTempBase=outputtemp
 set SampleFolder=%OutputFolderTempBase%\samples
 set ThirdPartyFolder=%OutputFolderTempBase%\thirdparty
-set Version=1.0.1
+set Version=1.0.2
 
 if exist %OutputFolderTempBase% (
     rmdir /s /q %OutputFolderTempBase%

@@ -1570,7 +1570,7 @@ namespace BaiduBce.Services.Bos
 
         private Uri ConvertRequestToUri(InternalRequest request)
         {
-            string resourcePath = HttpUtils.NormalizePath(request.Uri.AbsolutePath);
+            string resourcePath = request.Uri.AbsolutePath;
 
             // Removed the padding "/" that was already added into the request's resource path.
             if (resourcePath.StartsWith("/"))
