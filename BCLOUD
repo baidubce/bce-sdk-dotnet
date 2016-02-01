@@ -1,1 +1,1 @@
-BUILD_SUBMITTER -e WIN32 -x -u . -c "cd inf/bce/sdk/dotnet && chmod -R +x . && ./build.bat" -m inf/bce/sdk/dotnet
+BUILD_SUBMITTER -e WIN2012 -x -u . -c "cd inf/bce/sdk/dotnet && chmod -R +x . && ./build.bat" -m inf/bce/sdk/dotnet
