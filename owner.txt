@@ -1,2 +1,2 @@
-owner=lizhibiao@baidu.com
+owner=lizhibiao@baidu.com,lili19@baidu.com
 owner_inherit=true
