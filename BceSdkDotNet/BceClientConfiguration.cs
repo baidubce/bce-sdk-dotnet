@@ -271,7 +271,7 @@ namespace BaiduBce
             string runtimeVersion = string.Format(
                 CultureInfo.InvariantCulture, "{0}.{1}", Environment.Version.Major, Environment.Version.MajorRevision);
             string userAgent = string.Format("bce-sdk-dotnet/{0}/Framework:{1}/Runtime:{2}/OS:{3}",
-                Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                Assembly.GetExecutingAssembly().GetName().Version.ToString(),
                 GetFrameworkVersion(),
                 runtimeVersion,
                 osVersion);
