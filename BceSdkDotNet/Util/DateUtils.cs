@@ -8,7 +8,7 @@ namespace BaiduBce.Util
 {
     public static class DateUtils
     {
-        private static string rfc822DateFormat = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
+        private static string rfc822DateFormat = "ddd, dd MMM yyyy HH:mm:ss 'GMT'";
 
         public static string FormatAlternateIso8601Date(DateTime date)
         {
