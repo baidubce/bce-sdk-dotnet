@@ -1617,7 +1617,7 @@ namespace BaiduBce.Services.Bos
 
             try
             {
-                return new Uri(urlstring);
+                return new Uri(HttpUtility.UrlDecode(urlstring, Encoding.UTF8));
             }
             catch (UriFormatException e)
             {
