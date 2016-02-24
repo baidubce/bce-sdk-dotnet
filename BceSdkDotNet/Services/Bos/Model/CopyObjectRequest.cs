@@ -43,9 +43,5 @@ namespace BaiduBce.Services.Bos.Model
         /// </summary>
         public string ETag { get; set; }
 
-        public CopyObjectRequest()
-        {
-            NewObjectMetadata = new ObjectMetadata();
-        }
     }
 }
