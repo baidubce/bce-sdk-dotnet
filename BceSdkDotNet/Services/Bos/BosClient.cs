@@ -33,7 +33,7 @@ namespace BaiduBce.Services.Bos
     public class BosClient : BceClientBase
     {
         private const string UrlPrefix = "/v1";
-        private const string serviceEndpointFormat = "%s://%s.bcebos.com";
+        private const string serviceEndpointFormat = "{0}://{1}.bcebos.com";
 
         private ILog logger = LogManager.GetLogger(typeof (BosClient));
 

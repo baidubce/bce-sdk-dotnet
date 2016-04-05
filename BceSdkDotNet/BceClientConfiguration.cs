@@ -191,51 +191,51 @@ namespace BaiduBce
             }
             if (other.TimeoutInMillis.HasValue)
             {
-                this.TimeoutInMillis = other.TimeoutInMillis;
+                ret.TimeoutInMillis = other.TimeoutInMillis;
             }
             if (other.ReadWriteTimeoutInMillis.HasValue)
             {
-                this.ReadWriteTimeoutInMillis = other.ReadWriteTimeoutInMillis;
+                ret.ReadWriteTimeoutInMillis = other.ReadWriteTimeoutInMillis;
             }
             if (other.ProxyHost != null)
             {
-                this.ProxyHost = other.ProxyHost;
+                ret.ProxyHost = other.ProxyHost;
             }
             if (other.ProxyPort.HasValue)
             {
-                this.ProxyPort = other.ProxyPort;
+                ret.ProxyPort = other.ProxyPort;
             }
             if (other.ProxyCredentials != null)
             {
-                this.ProxyCredentials = other.ProxyCredentials;
+                ret.ProxyCredentials = other.ProxyCredentials;
             }
             if (other.UseNagleAlgorithm.HasValue)
             {
-                this.UseNagleAlgorithm = other.UseNagleAlgorithm;
+                ret.UseNagleAlgorithm = other.UseNagleAlgorithm;
             }
             if (other.MaxIdleTimeInMillis.HasValue)
             {
-                this.MaxIdleTimeInMillis = other.MaxIdleTimeInMillis;
+                ret.MaxIdleTimeInMillis = other.MaxIdleTimeInMillis;
             }
             if (other.ConnectionLimit.HasValue)
             {
-                this.ConnectionLimit = other.ConnectionLimit;
+                ret.ConnectionLimit = other.ConnectionLimit;
             }
             if (other.SocketBufferSizeInBytes.HasValue)
             {
-                this.SocketBufferSizeInBytes = other.SocketBufferSizeInBytes;
+                ret.SocketBufferSizeInBytes = other.SocketBufferSizeInBytes;
             }
             if (other.Signer != null)
             {
-                this.Signer = other.Signer;
+                ret.Signer = other.Signer;
             }
             if (other.SignOptions != null)
             {
-                this.SignOptions = other.SignOptions;
+                ret.SignOptions = other.SignOptions;
             }
             if (other.RetryPolicy != null)
             {
-                this.RetryPolicy = other.RetryPolicy;
+                ret.RetryPolicy = other.RetryPolicy;
             }
             return ret;
         }
