@@ -1,2 +1,0 @@
-owner=lizhibiao@baidu.com,lili19@baidu.com
-owner_inherit=true
