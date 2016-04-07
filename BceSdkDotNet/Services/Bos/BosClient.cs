@@ -35,7 +35,7 @@ namespace BaiduBce.Services.Bos
         private const string UrlPrefix = "/v1";
         private const string serviceEndpointFormat = "{0}://{1}.bcebos.com";
 
-        private ILog logger = LogManager.GetLogger(typeof (BosClient));
+        private ILog logger = LogManager.GetLogger(typeof(BosClient));
 
         /// <summary>
         /// Constructs a new client to invoke service methods on Bos.
@@ -77,7 +77,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The newly created bucket. </returns>
         public CreateBucketResponse CreateBucket(string bucketName)
         {
-            return this.CreateBucket(new CreateBucketRequest() {BucketName = bucketName});
+            return this.CreateBucket(new CreateBucketRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace BaiduBce.Services.Bos
         /// <param name="bucketName"> The name of the bucket to delete. </param>
         public void DeleteBucket(string bucketName)
         {
-            this.DeleteBucket(new DeleteBucketRequest() {BucketName = bucketName});
+            this.DeleteBucket(new DeleteBucketRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace BaiduBce.Services.Bos
         ///     the value <code>false</code> if there is no bucket in Bos with that name. </returns>
         public bool DoesBucketExist(string bucketName)
         {
-            return this.DoesBucketExist(new DoesBucketExistRequest() {BucketName = bucketName});
+            return this.DoesBucketExist(new DoesBucketExistRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The <code>GetBuckeetAclResponse</code> for the specified Bos bucket. </returns>
         public GetBucketAclResponse GetBucketAcl(string bucketName)
         {
-            return this.GetBucketAcl(new BucketRequestBase() {BucketName = bucketName});
+            return this.GetBucketAcl(new BucketRequestBase() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace BaiduBce.Services.Bos
         /// <param name="acl"> The pre-configured <code>CannedAccessControlLists</code> to set for the specified bucket. </param>
         public void SetBucketAcl(string bucketName, string acl)
         {
-            this.SetBucketAcl(new SetBucketAclRequest() {BucketName = bucketName, CannedAcl = acl});
+            this.SetBucketAcl(new SetBucketAclRequest() { BucketName = bucketName, CannedAcl = acl });
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket. </returns>
         public GetBucketLocationResponse GetBucketLocation(string bucketName)
         {
-            return this.GetBucketLocation(new BucketRequestBase() {BucketName = bucketName});
+            return this.GetBucketLocation(new BucketRequestBase() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace BaiduBce.Services.Bos
         ///     request parameters, etc. </returns>
         public ListObjectsResponse ListObjects(string bucketName)
         {
-            return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName});
+            return this.ListObjects(new ListObjectsRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace BaiduBce.Services.Bos
         ///     request parameters, etc. </returns>
         public ListObjectsResponse ListObjects(string bucketName, string prefix)
         {
-            return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName, Prefix = prefix});
+            return this.ListObjects(new ListObjectsRequest() { BucketName = bucketName, Prefix = prefix });
         }
 
         /// <summary>
@@ -621,7 +621,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, FileInfo fileInfo)
         {
-            return this.PutObject(new PutObjectRequest() {BucketName = bucketName, Key = key, FileInfo = fileInfo});
+            return this.PutObject(new PutObjectRequest() { BucketName = bucketName, Key = key, FileInfo = fileInfo });
         }
 
         /// <summary>
@@ -832,7 +832,7 @@ namespace BaiduBce.Services.Bos
             return this.AppendObject(bucketName, key, input, offset, new ObjectMetadata());
         }
 
-        public AppendObjectResponse AppendObject(string bucketName, string key, Stream input,long offset, ObjectMetadata metadata)
+        public AppendObjectResponse AppendObject(string bucketName, string key, Stream input, long offset, ObjectMetadata metadata)
         {
             return this.AppendObject(new AppendObjectRequest()
             {
@@ -859,9 +859,9 @@ namespace BaiduBce.Services.Bos
             return this.AppendObject(bucketName, key, input, offset, new ObjectMetadata());
         }
 
-        public AppendObjectResponse AppendObject(string bucketName, string key, string input,long offset, ObjectMetadata metadata)
+        public AppendObjectResponse AppendObject(string bucketName, string key, string input, long offset, ObjectMetadata metadata)
         {
-            return this.AppendObject(bucketName, key, Encoding.UTF8.GetBytes(input),offset,metadata);
+            return this.AppendObject(bucketName, key, Encoding.UTF8.GetBytes(input), offset, metadata);
         }
         public AppendObjectResponse AppendObject(string bucketName, string key, byte[] input)
         {
@@ -878,27 +878,28 @@ namespace BaiduBce.Services.Bos
             return this.AppendObject(bucketName, key, input, offset, new ObjectMetadata());
         }
 
-        public AppendObjectResponse AppendObject(string bucketName, string key, byte[] input,long offset, ObjectMetadata metadata)
+        public AppendObjectResponse AppendObject(string bucketName, string key, byte[] input, long offset, ObjectMetadata metadata)
         {
             if (metadata.ContentLength == 0)
             {
                 metadata.ContentLength = input.Length;
             }
-            return this.AppendObject(bucketName, key, new MemoryStream(input),offset,metadata);
+            return this.AppendObject(bucketName, key, new MemoryStream(input), offset, metadata);
         }
+
         public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input)
         {
-            return this.AppendObject(bucketName, key, input, 0, new ObjectMetadata());
+            return this.AppendObject(bucketName, key, input, 0, input.Length, new ObjectMetadata());
         }
 
-        public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input, long size, ObjectMetadata metadata)
+        public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input, ObjectMetadata metadata)
         {
-            return this.AppendObject(bucketName, key, input, 0, metadata);
+            return this.AppendObject(bucketName, key, input, 0, input.Length, metadata);
         }
 
-        public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input, long offset, long size)
+    public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input, long offset, long size)
         {
-            return this.AppendObject(bucketName, key, input, offset, new ObjectMetadata());
+            return this.AppendObject(bucketName, key, input, offset, offset, new ObjectMetadata());
         }
 
         public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input,long offset,long size, ObjectMetadata metadata)
