@@ -67,12 +67,12 @@ namespace BaiduBce.Services.Bos.Model
         /// according to RFC 1864. This data is used as an integrity check to verify
         /// that the data received by the caller is the same data that was sent by
         /// Baidu Bos.
-        /// 
+        ///
         /// <para>
         /// This field represents the hex encoded 128-bit MD5 digest of an object's
         /// content as calculated by Baidu Bos. The ContentMD5 field represents the
         /// base64 encoded 128-bit MD5 digest as calculated on the caller's side.
-        /// 
+        ///
         /// </para>
         /// </summary>
         public string ETag { get; set; }
@@ -91,6 +91,18 @@ namespace BaiduBce.Services.Bos.Model
         /// The content range of object.
         /// </summary>
         public string ContentRange { get; set; }
+
+        public int BceNextAppendOffset { get; set; }
+
+        public string BceObjectType { get; set; }
+
+        public string Expires { get; set; }
+
+        public string CacheControl { get; set; }
+
+        public string BceObjectAcl { get; set; }
+
+        public string BceObjectGrantRead { get; set; }
 
         public ObjectMetadata()
         {
