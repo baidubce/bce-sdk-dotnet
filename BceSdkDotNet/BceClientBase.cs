@@ -10,11 +10,13 @@
 // specific language governing permissions and limitations under the License.
 
 using System;
-using System.Net;
 using System.IO;
+using System.Net;
+using System.Text;
 using BaiduBce.Http;
-using BaiduBce.Util;
+using BaiduBce.Internal;
 using BaiduBce.Model;
+using BaiduBce.Util;
 
 namespace BaiduBce
 {
@@ -83,6 +85,38 @@ namespace BaiduBce
             string protocol = config.Protocol ?? BceConstants.Protocol.Http;
             string region = config.Region ?? BceConstants.Region.Beijing;
             return string.Format(this.serviceEndpointFormat, protocol, region);
+        }
+
+        protected InternalRequest CreateInternalRequest(
+            BceClientConfiguration config, string httpMethod, string[] pathComponents)
+        {
+            var internalRequest = new InternalRequest();
+            internalRequest.Config = this.config.Merge(config);
+            internalRequest.Uri = new Uri(
+                HttpUtils.AppendUri(this.ComputeEndpoint(internalRequest.Config), pathComponents));
+            internalRequest.HttpMethod = httpMethod;
+            var timestamp = internalRequest.Config.SignOptions.Timestamp;
+            if (timestamp == DateTime.MinValue)
+            {
+                timestamp = DateTime.Now;
+            }
+            internalRequest.Headers[BceConstants.HttpHeaders.BceDate] = DateUtils.FormatAlternateIso8601Date(timestamp);
+            internalRequest.Headers[BceConstants.HttpHeaders.Host] = HttpUtils.GenerateHostHeader(internalRequest.Uri);
+            return internalRequest;
+        }
+
+        /// <summary>
+        /// Converts the json string into UTF-8 string and set it as the content of internalRequest, which will be
+        /// used as the http request body. Content-Length and Content-Type ard set accordingly.
+        /// </summary>
+        /// <param name="internalRequest">The request used to build the http request</param>
+        /// <param name="json">The json string to be set as content</param>
+        protected void FillRequestBodyForJson(InternalRequest internalRequest, string json)
+        {
+            byte[] jsonUTF8 = Encoding.UTF8.GetBytes(json);
+            internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = jsonUTF8.Length.ToString();
+            internalRequest.Headers[BceConstants.HttpHeaders.ContentType] = "application/json; charset=utf-8";
+            internalRequest.Content = new MemoryStream(jsonUTF8);
         }
 
         /// <summary>

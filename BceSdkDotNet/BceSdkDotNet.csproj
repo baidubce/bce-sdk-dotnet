@@ -50,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auth\DefaultBceSessionCredentials.cs" />
     <Compile Include="Auth\DefaultBceCredentials.cs" />
+    <Compile Include="Auth\IBceSessionCredentials.cs" />
     <Compile Include="Auth\IBceCredentials.cs" />
     <Compile Include="Auth\BceV1Signer.cs" />
     <Compile Include="Auth\ISigner.cs" />
@@ -117,6 +119,9 @@
     <Compile Include="Services\Bos\Model\PutObjectRequest.cs" />
     <Compile Include="Services\Bos\Model\PutObjectResponse.cs" />
     <Compile Include="Services\Bos\Model\User.cs" />
+    <Compile Include="Services\Sts\Model\GetSessionTokenRequest.cs" />
+    <Compile Include="Services\Sts\Model\GetSessionTokenResponse.cs" />
+    <Compile Include="Services\Sts\StsClient.cs" />
     <Compile Include="Util\DateUtils.cs" />
     <Compile Include="Util\HashUtils.cs" />
     <Compile Include="Util\HttpUtils.cs" />

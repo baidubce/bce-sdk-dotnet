@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace BaiduBce.UnitTest.Services.Bos
+namespace BaiduBce.UnitTest
 {
     public class BceClientUnitTestBase
     {

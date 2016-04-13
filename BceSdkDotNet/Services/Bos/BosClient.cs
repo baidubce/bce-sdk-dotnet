@@ -11,18 +11,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.IO;
-using System.Web;
+using System.Net;
 using System.Text;
-using System.Web.UI.WebControls;
-using BaiduBce.Auth;
+using System.Web;
+
 using log4net;
+
+using BaiduBce.Auth;
 using BaiduBce.Internal;
-using BaiduBce.Services.Bos.Model;
 using BaiduBce.Model;
+using BaiduBce.Services.Bos.Model;
 using BaiduBce.Util;
-using Newtonsoft.Json;
 
 namespace BaiduBce.Services.Bos
 {
@@ -35,7 +35,7 @@ namespace BaiduBce.Services.Bos
         private const string UrlPrefix = "/v1";
         private const string serviceEndpointFormat = "{0}://{1}.bcebos.com";
 
-        private ILog logger = LogManager.GetLogger(typeof (BosClient));
+        private ILog logger = LogManager.GetLogger(typeof(BosClient));
 
         /// <summary>
         /// Constructs a new client to invoke service methods on Bos.
@@ -77,7 +77,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The newly created bucket. </returns>
         public CreateBucketResponse CreateBucket(string bucketName)
         {
-            return this.CreateBucket(new CreateBucketRequest() {BucketName = bucketName});
+            return this.CreateBucket(new CreateBucketRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace BaiduBce.Services.Bos
         /// <param name="bucketName"> The name of the bucket to delete. </param>
         public void DeleteBucket(string bucketName)
         {
-            this.DeleteBucket(new DeleteBucketRequest() {BucketName = bucketName});
+            this.DeleteBucket(new DeleteBucketRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace BaiduBce.Services.Bos
         ///     the value <code>false</code> if there is no bucket in Bos with that name. </returns>
         public bool DoesBucketExist(string bucketName)
         {
-            return this.DoesBucketExist(new DoesBucketExistRequest() {BucketName = bucketName});
+            return this.DoesBucketExist(new DoesBucketExistRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The <code>GetBuckeetAclResponse</code> for the specified Bos bucket. </returns>
         public GetBucketAclResponse GetBucketAcl(string bucketName)
         {
-            return this.GetBucketAcl(new BucketRequestBase() {BucketName = bucketName});
+            return this.GetBucketAcl(new BucketRequestBase() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace BaiduBce.Services.Bos
         /// <param name="acl"> The pre-configured <code>CannedAccessControlLists</code> to set for the specified bucket. </param>
         public void SetBucketAcl(string bucketName, string acl)
         {
-            this.SetBucketAcl(new SetBucketAclRequest() {BucketName = bucketName, CannedAcl = acl});
+            this.SetBucketAcl(new SetBucketAclRequest() { BucketName = bucketName, CannedAcl = acl });
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket. </returns>
         public GetBucketLocationResponse GetBucketLocation(string bucketName)
         {
-            return this.GetBucketLocation(new BucketRequestBase() {BucketName = bucketName});
+            return this.GetBucketLocation(new BucketRequestBase() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace BaiduBce.Services.Bos
         ///     request parameters, etc. </returns>
         public ListObjectsResponse ListObjects(string bucketName)
         {
-            return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName});
+            return this.ListObjects(new ListObjectsRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace BaiduBce.Services.Bos
         ///     request parameters, etc. </returns>
         public ListObjectsResponse ListObjects(string bucketName, string prefix)
         {
-            return this.ListObjects(new ListObjectsRequest() {BucketName = bucketName, Prefix = prefix});
+            return this.ListObjects(new ListObjectsRequest() { BucketName = bucketName, Prefix = prefix });
         }
 
         /// <summary>
@@ -621,7 +621,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> A PutObjectResponse object containing the information returned by Bos for the newly created object. </returns>
         public PutObjectResponse PutObject(string bucketName, string key, FileInfo fileInfo)
         {
-            return this.PutObject(new PutObjectRequest() {BucketName = bucketName, Key = key, FileInfo = fileInfo});
+            return this.PutObject(new PutObjectRequest() { BucketName = bucketName, Key = key, FileInfo = fileInfo });
         }
 
         /// <summary>
@@ -798,7 +798,7 @@ namespace BaiduBce.Services.Bos
             }
 
             internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = metadata.ContentLength.ToString();
-            
+
             using (internalRequest.Content)
             {
                 PopulateRequestMetadata(internalRequest, metadata);
@@ -825,7 +825,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The object stored in Bos in the specified bucket and key. </returns>
         public BosObject GetObject(string bucketName, string key)
         {
-            return this.GetObject(new GetObjectRequest() {BucketName = bucketName, Key = key});
+            return this.GetObject(new GetObjectRequest() { BucketName = bucketName, Key = key });
         }
 
         /// <summary>
@@ -841,7 +841,7 @@ namespace BaiduBce.Services.Bos
         ///     Returns <code>null</code> if constraints were specified but not met. </returns>
         public ObjectMetadata GetObject(string bucketName, string key, FileInfo destinationFile)
         {
-            return this.GetObject(new GetObjectRequest() {BucketName = bucketName, Key = key}, destinationFile);
+            return this.GetObject(new GetObjectRequest() { BucketName = bucketName, Key = key }, destinationFile);
         }
 
         /// <summary>
@@ -852,7 +852,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> The object content stored in Bos in the specified bucket and key. </returns>
         public byte[] GetObjectContent(string bucketName, string key)
         {
-            return this.GetObjectContent(new GetObjectRequest() {BucketName = bucketName, Key = key});
+            return this.GetObjectContent(new GetObjectRequest() { BucketName = bucketName, Key = key });
         }
 
         /// <summary>
@@ -874,7 +874,7 @@ namespace BaiduBce.Services.Bos
                     return IOUtils.StreamToBytes(
                         httpWebResponse.GetResponseStream(),
                         httpWebResponse.ContentLength,
-                        (int) config.SocketBufferSizeInBytes);
+                        (int)config.SocketBufferSizeInBytes);
                 }
             });
         }
@@ -927,7 +927,7 @@ namespace BaiduBce.Services.Bos
                     IOUtils.StreamToFile(
                         httpWebResponse.GetResponseStream(),
                         destinationFileInfo,
-                        (int) config.SocketBufferSizeInBytes);
+                        (int)config.SocketBufferSizeInBytes);
                     return GetObjectMetadata(httpWebResponse);
                 }
             });
@@ -949,7 +949,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> All Bos object metadata for the specified object. </returns>
         public ObjectMetadata GetObjectMetadata(string bucketName, string key)
         {
-            return this.GetObjectMetadata(new ObjectRequestBase() {BucketName = bucketName, Key = key});
+            return this.GetObjectMetadata(new ObjectRequestBase() { BucketName = bucketName, Key = key });
         }
 
         /// <summary>
@@ -1051,7 +1051,7 @@ namespace BaiduBce.Services.Bos
         /// <param name="key"> The key of the object to delete. </param>
         public void DeleteObject(string bucketName, string key)
         {
-            this.DeleteObject(new ObjectRequestBase() {BucketName = bucketName, Key = key});
+            this.DeleteObject(new ObjectRequestBase() { BucketName = bucketName, Key = key });
         }
 
         /// <summary>
@@ -1288,7 +1288,7 @@ namespace BaiduBce.Services.Bos
             {
                 PopulateRequestMetadata(internalRequest, metadata);
             }
-            PartETags partETags = new PartETags() {Parts = request.PartETags};
+            PartETags partETags = new PartETags() { Parts = request.PartETags };
             string json = JsonUtils.SerializeObject(partETags);
             FillRequestBodyForJson(internalRequest, json);
             return internalRequest.Config.RetryPolicy.Execute(attempt =>
@@ -1360,7 +1360,7 @@ namespace BaiduBce.Services.Bos
         /// <returns> A ListMultipartUploadsResponse from Bos. </returns>
         public ListMultipartUploadsResponse ListMultipartUploads(string bucketName)
         {
-            return ListMultipartUploads(new ListMultipartUploadsRequest() {BucketName = bucketName});
+            return ListMultipartUploads(new ListMultipartUploadsRequest() { BucketName = bucketName });
         }
 
         /// <summary>
@@ -1539,21 +1539,7 @@ namespace BaiduBce.Services.Bos
             {
                 key = (request as ObjectRequestBase).Key;
             }
-            var internalRequest = new InternalRequest();
-            var config = this.config.Merge(request.Config);
-            internalRequest.Config = config;
-            internalRequest.Uri = new Uri(
-                HttpUtils.AppendUri(this.ComputeEndpoint(config), UrlPrefix, bucketName, key));
-            internalRequest.HttpMethod = httpMethod;
-            var timestamp = config.SignOptions.Timestamp;
-            if (timestamp == DateTime.MinValue)
-            {
-                timestamp = DateTime.Now;
-            }
-            internalRequest.Headers[BceConstants.HttpHeaders.BceDate] =
-                DateUtils.FormatAlternateIso8601Date(timestamp);
-            internalRequest.Headers[BceConstants.HttpHeaders.Host] = HttpUtils.GenerateHostHeader(internalRequest.Uri);
-            return internalRequest;
+            return CreateInternalRequest(request.Config, httpMethod, new string[] { UrlPrefix, bucketName, key });         
         }
 
         private InternalRequest CreateInternalRequestForGetObject(GetObjectRequest request)
@@ -1624,14 +1610,6 @@ namespace BaiduBce.Services.Bos
                 throw new BceClientException("Unable to convert request to well formed URL: " + e.Message, e);
             }
         }
-
-        private void FillRequestBodyForJson(InternalRequest internalRequest, string json)
-        {
-            internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = json.Length.ToString();
-            internalRequest.Headers[BceConstants.HttpHeaders.ContentType] = "application/json";
-            internalRequest.Content = new MemoryStream(Encoding.Default.GetBytes(json));
-        }
-
 
         #endregion
     }
