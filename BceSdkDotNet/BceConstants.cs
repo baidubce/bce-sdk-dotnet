@@ -57,6 +57,8 @@ namespace BaiduBce
 
             public const string Expires = "Expires";
 
+            public const string CacheControl = "Cache-Control";
+
             public const string Host = "Host";
 
             public const string LastModified = "Last-Modified";
@@ -74,6 +76,14 @@ namespace BaiduBce
             public const string BcePrefix = "x-bce-";
 
             public const string BceAcl = "x-bce-acl";
+
+            public const string BceObjectAcl = "x-bce-object-acl";
+
+            public const string BceObjectGrantRead = "x-bce-object-grant-read";
+
+            public const string BceNextAppendOffset = "x-bce-next-append-offset";
+
+            public const string BceObjectType = "x-bce-object-type";
 
             public const string BceContentSha256 = "x-bce-content-sha256";
 
@@ -264,6 +274,10 @@ namespace BaiduBce
             public const string PreconditionFailed = "PreconditionFailed";
             public const string RequestExpired = "RequestExpired";
             public const string SignatureDoesNotMatch = "SignatureDoesNotMatch";
+        }
+
+        public static class BceObjectType{
+            public const string Appendable = "Appendable";
         }
     }
 }

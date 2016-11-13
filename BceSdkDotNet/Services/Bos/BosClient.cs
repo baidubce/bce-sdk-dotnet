@@ -57,10 +57,10 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Gets the current owner of the Bos account that the authenticated sender of the request is using.
-        /// 
+        ///
         /// <para>
         /// The caller <i>must</i> authenticate with a valid BCE Access Key ID that is registered with Bos.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <returns> The account of the authenticated sender </returns>
@@ -102,12 +102,12 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Returns a list of all Bos buckets that the authenticated sender of the request owns.
-        /// 
+        ///
         /// <para>
         /// Users must authenticate with a valid BCE Access Key ID that is registered
         /// with Bos. Anonymous requests cannot list buckets, and users cannot
         /// list buckets that they did not create.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <returns> All of the Bos buckets owned by the authenticated sender of the request. </returns>
@@ -118,12 +118,12 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Returns a list of all Bos buckets that the authenticated sender of the request owns.
-        /// 
+        ///
         /// <para>
         /// Users must authenticate with a valid BCE Access Key ID that is registered
         /// with Bos. Anonymous requests cannot list buckets, and users cannot
         /// list buckets that they did not create.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="request"> The request containing all of the options related to the listing of buckets. </param>
@@ -146,10 +146,10 @@ namespace BaiduBce.Services.Bos
         /// <summary>
         /// Deletes the specified bucket. All objects in the bucket must be deleted before the bucket itself
         /// can be deleted.
-        /// 
+        ///
         /// <para>
         /// Only the owner of a bucket can delete it, regardless of the bucket's access control policy.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="bucketName"> The name of the bucket to delete. </param>
@@ -161,10 +161,10 @@ namespace BaiduBce.Services.Bos
         /// <summary>
         /// Deletes the specified bucket. All objects in the bucket must be deleted before the bucket itself
         /// can be deleted.
-        /// 
+        ///
         /// <para>
         /// Only the owner of a bucket can delete it, regardless of the bucket's access control policy.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="request"> The request object containing all options for deleting a Bos bucket. </param>
@@ -187,13 +187,13 @@ namespace BaiduBce.Services.Bos
         /// Checks if the specified bucket exists. Bos buckets are named in a
         /// global namespace; use this method to determine if a specified bucket name
         /// already exists, and therefore can't be used to create a new bucket.
-        /// 
+        ///
         /// <para>
         /// If invalid security credentials are used to execute this method, the
         /// client is not able to distinguish between bucket permission errors and
         /// invalid credential errors, and this method could return an incorrect
         /// result.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="bucketName"> The name of the bucket to check. </param>
@@ -208,13 +208,13 @@ namespace BaiduBce.Services.Bos
         /// Checks if the specified bucket exists. Bos buckets are named in a
         /// global namespace; use this method to determine if a specified bucket name
         /// already exists, and therefore can't be used to create a new bucket.
-        /// 
+        ///
         /// <para>
         /// If invalid security credentials are used to execute this method, the
         /// client is not able to distinguish between bucket permission errors and
         /// invalid credential errors, and this method could return an incorrect
         /// result.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="request"> The request object containing all options for checking a Bos bucket. </param>
@@ -252,7 +252,7 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Gets the ACL for the specified Bos bucket.
-        /// 
+        ///
         /// <para>
         /// Each bucket and object in Bos has an ACL that defines its access
         /// control policy. When a request is made, Bos authenticates the
@@ -260,7 +260,7 @@ namespace BaiduBce.Services.Bos
         /// ACL to verify the sender was granted access to the bucket or object. If
         /// the sender is approved, the request proceeds. Otherwise, Bos
         /// returns an error.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="bucketName"> The name of the bucket whose ACL is being retrieved. </param>
@@ -272,7 +272,7 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Gets the ACL for the specified Bos bucket.
-        /// 
+        ///
         /// <para>
         /// Each bucket and object in Bos has an ACL that defines its access
         /// control policy. When a request is made, Bos authenticates the
@@ -280,7 +280,7 @@ namespace BaiduBce.Services.Bos
         /// ACL to verify the sender was granted access to the bucket or object. If
         /// the sender is approved, the request proceeds. Otherwise, Bos
         /// returns an error.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="request"> The request containing the name of the bucket whose ACL is being retrieved. </param>
@@ -310,12 +310,12 @@ namespace BaiduBce.Services.Bos
         /// <summary>
         /// Sets the CannedAccessControlList for the specified Bos bucket using one of
         /// the pre-configured <code>CannedAccessControlLists</code>.
-        /// 
+        ///
         /// <para>
         /// A <code>CannedAccessControlList</code>
         /// provides a quick way to configure an object or bucket with commonly used
         /// access control policies.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="bucketName"> The name of the bucket whose ACL is being set. </param>
@@ -365,10 +365,10 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Gets the Location for the specified Bos bucket.
-        /// 
+        ///
         /// <para>
         /// Each bucket and object in Bos has an Location that defines its location
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="bucketName"> The name of the bucket whose Location is being retrieved. </param>
@@ -380,10 +380,10 @@ namespace BaiduBce.Services.Bos
 
         /// <summary>
         /// Gets the Location for the specified Bos bucket.
-        /// 
+        ///
         /// <para>
         /// Each bucket and object in Bos has an Location that defines its location
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="request"> The request containing the name of the bucket whose Location is being retrieved. </param>
@@ -817,6 +817,169 @@ namespace BaiduBce.Services.Bos
             }
         }
 
+        public AppendObjectResponse AppendObject(string bucketName, string key, Stream input)
+        {
+            return this.AppendObject(bucketName, key, input, 0, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, Stream input, ObjectMetadata metadata)
+        {
+            return this.AppendObject(bucketName, key, input, 0, metadata);
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, Stream input, long offset)
+        {
+            return this.AppendObject(bucketName, key, input, offset, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, Stream input, long offset, ObjectMetadata metadata)
+        {
+            return this.AppendObject(new AppendObjectRequest()
+            {
+                BucketName = bucketName,
+                Key = key,
+                Stream = input,
+                Offset = offset,
+                Size = input.Length,
+                ObjectMetadata = metadata
+            });
+        }
+        public AppendObjectResponse AppendObject(string bucketName, string key, string input)
+        {
+            return this.AppendObject(bucketName, key, input, 0, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, string input, ObjectMetadata metadata)
+        {
+            return this.AppendObject(bucketName, key, input, 0, metadata);
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, string input, long offset)
+        {
+            return this.AppendObject(bucketName, key, input, offset, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, string input, long offset, ObjectMetadata metadata)
+        {
+            return this.AppendObject(bucketName, key, Encoding.UTF8.GetBytes(input), offset, metadata);
+        }
+        public AppendObjectResponse AppendObject(string bucketName, string key, byte[] input)
+        {
+            return this.AppendObject(bucketName, key, input, 0, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, byte[] input, ObjectMetadata metadata)
+        {
+            return this.AppendObject(bucketName, key, input, 0, metadata);
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, byte[] input, long offset)
+        {
+            return this.AppendObject(bucketName, key, input, offset, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, byte[] input, long offset, ObjectMetadata metadata)
+        {
+            if (metadata.ContentLength == 0)
+            {
+                metadata.ContentLength = input.Length;
+            }
+            return this.AppendObject(bucketName, key, new MemoryStream(input), offset, metadata);
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input)
+        {
+            return this.AppendObject(bucketName, key, input, 0, input.Length, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input, ObjectMetadata metadata)
+        {
+            return this.AppendObject(bucketName, key, input, 0, input.Length, metadata);
+        }
+
+    public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input, long offset, long size)
+        {
+            return this.AppendObject(bucketName, key, input, offset, offset, new ObjectMetadata());
+        }
+
+        public AppendObjectResponse AppendObject(string bucketName, string key, FileInfo input,long offset,long size, ObjectMetadata metadata)
+        {
+            metadata.ContentLength = size;
+            if (metadata.ContentType == null)
+                {
+                    metadata.ContentType = MimeTypes.GetMimetype(input);
+                }
+            long fileSize = input.Length;
+            if(fileSize<offset+size){
+                throw new BceServiceException()
+                    {
+                        ErrorMessage = "Can't read the content beyond the end of file.",
+                        StatusCode = 400,
+                        ErrorCode = "OutOfRange"
+                    };
+            }
+            FileStream stream = input.OpenRead();
+            stream.Seek(offset, SeekOrigin.Begin);
+            return this.AppendObject(bucketName, key, stream,offset,metadata);
+        }
+
+        public AppendObjectResponse AppendObject(AppendObjectRequest request)
+        {
+            CheckNotNull(request, "request should NOT be null.");
+            if (string.IsNullOrEmpty(request.Key))
+            {
+                throw new ArgumentNullException("object key should not be null or empty");
+            }
+
+            ObjectMetadata metadata = request.ObjectMetadata;
+            Stream input = request.Stream;
+            InternalRequest internalRequest = this.CreateInternalRequest(BceConstants.HttpMethod.Post, request);
+            internalRequest.Parameters["append"] = null;
+            if(request.Offset > 0){
+                internalRequest.Parameters["offset"] = request.Offset.ToString();
+            }
+
+            if(metadata.ContentLength>0){
+                request.Size = metadata.ContentLength;
+            }else{
+                request.Size = input.Length;
+                metadata.ContentLength = request.Size;
+            }
+
+                CheckNotNull(input, "Either file or inputStream should be set for PutObjectRequest.");
+                if (metadata.ContentLength > input.Length)
+                {
+                    throw new ArgumentNullException("ContentLength should not be greater than stream length");
+                }
+
+            if (input.CanSeek && string.IsNullOrEmpty(metadata.ContentMd5))
+            {
+                metadata.ContentMd5 = HashUtils.ComputeMD5Hash(input, request.Size);
+            }
+                internalRequest.Content = input;
+
+
+            internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = metadata.ContentLength.ToString();
+
+            using (internalRequest.Content)
+            {
+                PopulateRequestMetadata(internalRequest, metadata);
+                internalRequest.Config.RetryPolicy.CanRetry = internalRequest.Content.CanSeek;
+                return internalRequest.Config.RetryPolicy.Execute<AppendObjectResponse>(attempt =>
+                {
+                    var httpWebResponse = this.httpClient.Execute(internalRequest);
+                    using (httpWebResponse)
+                    {
+                        AppendObjectResponse appendObjectResponse = ToObject<AppendObjectResponse>(httpWebResponse);
+                        appendObjectResponse.BceNextAppendOffset = Convert.ToInt64(httpWebResponse.Headers[BceConstants.HttpHeaders.BceNextAppendOffset]);
+                        appendObjectResponse.ContentEncoding = httpWebResponse.Headers[BceConstants.HttpHeaders.ContentEncoding];
+                        appendObjectResponse.ContentMd5 = httpWebResponse.Headers[BceConstants.HttpHeaders.ContentMd5];
+                        return appendObjectResponse;
+                    }
+                });
+            }
+        }
+
         /// <summary>
         /// Gets the object stored in Bos under the specified bucket and key.
         /// </summary>
@@ -937,11 +1100,11 @@ namespace BaiduBce.Services.Bos
         /// Gets the metadata for the specified Bos object without actually fetching the object itself.
         /// This is useful in obtaining only the object metadata, and avoids wasting bandwidth on fetching
         /// the object data.
-        /// 
+        ///
         /// <para>
         /// The object metadata contains information such as content type, content disposition, etc.,
         /// as well as custom user metadata that can be associated with an object in Bos.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="bucketName"> The name of the bucket containing the object's whose metadata is being retrieved. </param>
@@ -956,11 +1119,11 @@ namespace BaiduBce.Services.Bos
         /// Gets the metadata for the specified Bos object without actually fetching the object itself.
         /// This is useful in obtaining only the object metadata, and avoids wasting bandwidth on fetching
         /// the object data.
-        /// 
+        ///
         /// <para>
         /// The object metadata contains information such as content type, content disposition, etc.,
         /// as well as custom user metadata that can be associated with an object in Bos.
-        /// 
+        ///
         /// </para>
         /// </summary>
         /// <param name="request"> The request object specifying the bucket, key whose metadata is being retrieved. </param>
@@ -1503,6 +1666,18 @@ namespace BaiduBce.Services.Bos
             if (metadata.ETag != null)
             {
                 request.Headers[BceConstants.HttpHeaders.ETag] = metadata.ETag;
+            }
+            if (metadata.CacheControl != null)
+            {
+                request.Headers[BceConstants.HttpHeaders.CacheControl] = metadata.CacheControl;
+            }
+            if (metadata.BceObjectAcl != null)
+            {
+                request.Headers[BceConstants.HttpHeaders.BceObjectAcl] = metadata.BceObjectAcl;
+            }
+            if (metadata.BceObjectGrantRead != null)
+            {
+                request.Headers[BceConstants.HttpHeaders.BceObjectGrantRead] = metadata.BceObjectGrantRead;
             }
 
             IDictionary<string, string> userMetadata = metadata.UserMetadata;
