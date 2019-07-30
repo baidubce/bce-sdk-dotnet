@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -91,6 +91,10 @@ namespace BaiduBce.Services.Bos.Model
         /// The content range of object.
         /// </summary>
         public string ContentRange { get; set; }
+        /// <summary>
+        /// storage class of object.
+        /// </summary>
+        public string StorageClass { get; set; }
 
         public ObjectMetadata()
         {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -66,5 +66,9 @@ namespace BaiduBce.Services.Bos.Model
         /// which multipart upload contains the parts to list.
         /// </summary>
         public string UploadId { get; set; }
+        /// <summary>
+        /// storage class of the upload.
+        /// </summary>
+        public string StorageClass { get; set; }
     }
 }

@@ -40,6 +40,11 @@ namespace BaiduBce.Http
             BceClientConfiguration config = request.Config;
             if (config.Credentials != null)
             {
+                if (config.Credentials is IBceSessionCredentials)
+                {
+                    request.Headers[BceConstants.HttpHeaders.BceSecurityToken] =
+                        (config.Credentials as IBceSessionCredentials).SessionToken;
+                }
                 request.Headers[BceConstants.HttpHeaders.Authorization] = config.Signer.Sign(request);
             }
             HttpWebRequest httpWebRequest = CreateHttpWebRequest(request);

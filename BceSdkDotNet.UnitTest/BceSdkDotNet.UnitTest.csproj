@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ExpectBceServiceException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BceClientUnitTestBase.cs" />
     <Compile Include="Services\Bos\BosClientUnitTest.cs" />

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -88,10 +88,14 @@ namespace BaiduBce
         }
 
         protected InternalRequest CreateInternalRequest(
-            BceClientConfiguration config, string httpMethod, string[] pathComponents)
+            BceRequestBase request, string httpMethod, string[] pathComponents)
         {
             var internalRequest = new InternalRequest();
-            internalRequest.Config = this.config.Merge(config);
+            internalRequest.Config = this.config.Merge(request.Config);
+            if (request.Credentials != null)
+            {
+                internalRequest.Config.Credentials = request.Credentials;
+            }
             internalRequest.Uri = new Uri(
                 HttpUtils.AppendUri(this.ComputeEndpoint(internalRequest.Config), pathComponents));
             internalRequest.HttpMethod = httpMethod;
