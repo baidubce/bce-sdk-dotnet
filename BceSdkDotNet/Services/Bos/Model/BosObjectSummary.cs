@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -46,5 +46,9 @@ namespace BaiduBce.Services.Bos.Model
         /// The user of this object - can be null if the requester doesn't have permission to view object ownership information.
         /// </summary>
         public User Owner { get; set; }
+        /// <summary>
+        /// storage class string of the object; can be STANDARD or STANDARD_IA.
+        /// </summary>
+        public string StorageClass { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -72,7 +72,7 @@ namespace BaiduBce.Services.Sts
             CheckNotNull(request, "request should not be null.");
 
             InternalRequest internalRequest = this.CreateInternalRequest(
-                request.Config, BceConstants.HttpMethod.Post, new string[] { UrlPrefix, "sessionToken" });
+                request, BceConstants.HttpMethod.Post, new string[] { UrlPrefix, "sessionToken" });
             if (request.DurationSeconds.HasValue)
             {
                 internalRequest.Parameters["durationSeconds"] = request.DurationSeconds.ToString();
