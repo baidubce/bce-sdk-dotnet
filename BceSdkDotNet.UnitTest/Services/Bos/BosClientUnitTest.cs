@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -298,7 +298,7 @@ namespace BaiduBce.UnitTest.Services.Bos
         public class GetObjectTest : Base
         {
             [TestMethod]
-            public void TestOrdinary()
+            public void TestGetObjectOk()
             {
                 string path = "put_object_ordinary.txt";
                 File.WriteAllText(path, "data");
@@ -317,6 +317,33 @@ namespace BaiduBce.UnitTest.Services.Bos
                     Encoding.Default.GetString(IOUtils.StreamToBytes(bosObject.ObjectContent,
                         bosObject.ObjectMetadata.ContentLength, 8192));
                 Assert.AreEqual(content, "data");
+            }
+
+            [TestMethod]
+            public void TestGetIAOk()
+            {
+                string path = "put_object_ordinary.txt";
+                File.WriteAllText(path, "data");
+                FileInfo fileInfo = new FileInfo(path);
+                string key = "te%%st  ";
+                var meta = new ObjectMetadata();
+                meta.StorageClass = BosConstants.StorageClass.StandardInfrequentAccess;
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo,
+                    ObjectMetadata = meta
+                };
+                String eTag = this.client.PutObject(request).ETAG;
+                Assert.AreEqual(eTag, HashUtils.ComputeMD5Hash(fileInfo));
+                BosObject bosObject = this.client.GetObject(this.bucketName, key);
+                String content =
+                    Encoding.Default.GetString(IOUtils.StreamToBytes(bosObject.ObjectContent,
+                        bosObject.ObjectMetadata.ContentLength, 8192));
+                Assert.AreEqual(content, "data");
+                Assert.AreEqual(BosConstants.StorageClass.StandardInfrequentAccess,
+                    bosObject.ObjectMetadata.StorageClass);
             }
 
             [TestMethod]
@@ -358,6 +385,25 @@ namespace BaiduBce.UnitTest.Services.Bos
                 Assert.AreEqual(uploads.Count, 1);
                 Assert.AreEqual(uploads[0].UploadId, uploadId);
             }
+
+            [TestMethod]
+            public void TestInitiateIAMultiUpload()
+            {
+                var request = new InitiateMultipartUploadRequest();
+                request.BucketName = this.bucketName;
+                request.Key = "test";
+                request.ObjectMetadata = new ObjectMetadata();
+                request.ObjectMetadata.StorageClass = BosConstants.StorageClass.StandardInfrequentAccess;
+                InitiateMultipartUploadResponse response = this.client.InitiateMultipartUpload(request);
+                Assert.AreEqual(response.Bucket, this.bucketName);
+                Assert.AreEqual(response.Key, "test");
+                String uploadId = response.UploadId;
+                List<MultipartUploadSummary> uploads =
+                    this.client.ListMultipartUploads(this.bucketName).Uploads;
+                Assert.AreEqual(uploads.Count, 1);
+                Assert.AreEqual(uploads[0].UploadId, uploadId);
+                Assert.AreEqual(BosConstants.StorageClass.StandardInfrequentAccess, uploads[0].StorageClass);
+            }
         }
 
         [TestClass]
@@ -391,7 +437,7 @@ namespace BaiduBce.UnitTest.Services.Bos
         public class ListPartsTest : Base
         {
             [TestMethod]
-            public void TestOrdinary()
+            public void TestListPartsOk()
             {
                 string uploadId = this.client.InitiateMultipartUpload(this.bucketName, "test").UploadId;
                 List<string> eTags = new List<string>();
@@ -416,6 +462,7 @@ namespace BaiduBce.UnitTest.Services.Bos
                 Assert.AreEqual(response.Owner.Id, this.owner.Id);
                 Assert.AreEqual(response.PartNumberMarker, 0);
                 Assert.AreEqual(response.UploadId, uploadId);
+                Assert.AreEqual(BosConstants.StorageClass.Standard, response.StorageClass);
                 List<PartSummary> parts = response.Parts;
                 Assert.AreEqual(parts.Count, 10);
                 for (int i = 0; i < 10; ++i)

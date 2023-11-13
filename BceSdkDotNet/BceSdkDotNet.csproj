@@ -11,6 +11,7 @@
     <AssemblyName>BceSdkDotNet</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\BceSdkDotNet.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\BceSdkDotNet.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -142,6 +145,27 @@
     <Compile Include="Util\Json\Mapper\ObjectMapper.cs" />
     <Compile Include="Util\MimeTypes.cs" />
     <Compile Include="Util\WebRequestExtension.cs" />
+    <Compile Include="Services\Sms\Model\BlackCreateRequest.cs" />
+    <Compile Include="Services\Sms\Model\BlackListRequest.cs" />
+    <Compile Include="Services\Sms\Model\BlackListResponse.cs" />
+    <Compile Include="Services\Sms\Model\QuotaQueryResponse.cs" />
+    <Compile Include="Services\Sms\Model\QuotaUpdateRequest.cs" />
+    <Compile Include="Services\Sms\Model\SignatureCreateRequest.cs" />
+    <Compile Include="Services\Sms\Model\SignatureCreateResponse.cs" />
+    <Compile Include="Services\Sms\Model\SignatureResponse.cs" />
+    <Compile Include="Services\Sms\Model\SignatureUpdateRequest.cs" />
+    <Compile Include="Services\Sms\Model\StatisticsTemplateListRequest.cs" />
+    <Compile Include="Services\Sms\Model\StatisticsTemplateListResponse.cs" />
+    <Compile Include="Services\Sms\Model\TemplateCreateRequest.cs" />
+    <Compile Include="Services\Sms\Model\TemplateCreateResponse.cs" />
+    <Compile Include="Services\Sms\Model\TemplateResponse.cs" />
+    <Compile Include="Services\Sms\Model\TemplateUpdateRequest.cs" />
+    <Compile Include="Services\Sms\SmsClient.cs" />
+    <Compile Include="Services\Sms\Model\SendMessageRequest.cs" />
+    <Compile Include="Services\Sms\Model\SendMessageResponse.cs" />
+    <Compile Include="Services\Sms\Model\ListStatisticsRequest.cs"/>
+    <Compile Include="Services\Sms\Model\ListStatisticsResponse.cs"/>
+    <Compile Include="Services\Sms\Model\ListStatisticsResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="mime.types" />

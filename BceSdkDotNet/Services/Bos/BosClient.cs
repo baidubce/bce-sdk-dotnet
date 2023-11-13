@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -570,6 +570,10 @@ namespace BaiduBce.Services.Bos
                             foreach (BosObjectSummary summary in contents)
                             {
                                 summary.BucketName = request.BucketName;
+                                if (summary.StorageClass == null)
+                                {
+                                    summary.StorageClass = BosConstants.StorageClass.Standard;
+                                }
                             }
                         }
                     }
@@ -798,6 +802,9 @@ namespace BaiduBce.Services.Bos
             }
 
             internalRequest.Headers[BceConstants.HttpHeaders.ContentLength] = metadata.ContentLength.ToString();
+            if (!String.IsNullOrEmpty(metadata.StorageClass)) {
+                internalRequest.Headers[BceConstants.HttpHeaders.BceStorageClass] = metadata.StorageClass;
+            }
 
             using (internalRequest.Content)
             {
@@ -969,7 +976,7 @@ namespace BaiduBce.Services.Bos
         {
             CheckNotNull(request, "request should not be null.");
 
-            InternalRequest internalRequest = CreateInternalRequest(BceConstants.HttpMethod.Get, request);
+            InternalRequest internalRequest = CreateInternalRequest(BceConstants.HttpMethod.Head, request);
             return internalRequest.Config.RetryPolicy.Execute<ObjectMetadata>(attempt =>
             {
                 var httpWebResponse = this.httpClient.Execute(internalRequest);
@@ -1039,7 +1046,26 @@ namespace BaiduBce.Services.Bos
                 var httpWebResponse = this.httpClient.Execute(internalRequest);
                 using (httpWebResponse)
                 {
-                    return ToObject<CopyObjectResponse>(httpWebResponse);
+                    var content = new StreamReader(httpWebResponse.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                    var errorResponse = JsonUtils.ToObject<BceServiceException.BceErrorResponse>(
+                        new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(content))));
+                    if (errorResponse != null && !string.IsNullOrEmpty(errorResponse.Code))
+                    {
+                        var bse = new BceServiceException();
+                        bse.ErrorCode = errorResponse.Code;
+                        bse.RequestId = errorResponse.RequestId;
+                        bse.StatusCode = 500;
+                        throw bse;
+                    }
+                    var response = JsonUtils.ToObject<CopyObjectResponse>(
+                        new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(content))));
+                    if (response == null)
+                    {
+                        response = new CopyObjectResponse();
+                    }
+                    response.BceRequestId = httpWebResponse.Headers[BceConstants.HttpHeaders.BceRequestId];
+                    response.BosDebugId = httpWebResponse.Headers[BceConstants.HttpHeaders.BosDebugId];
+                    return response;
                 }
             });
         }
@@ -1461,6 +1487,15 @@ namespace BaiduBce.Services.Bos
                 DateUtils.ParseRfc822Date(httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.LastModified));
             objectMetadata.BceContentSha256 =
                 httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.BceContentSha256);
+            string storageClass = httpWebResponse.GetResponseHeader(BceConstants.HttpHeaders.BceStorageClass);
+            if (!String.IsNullOrEmpty(storageClass))
+            {
+                objectMetadata.StorageClass = storageClass;
+            }
+            else
+            {
+                objectMetadata.StorageClass = BosConstants.StorageClass.Standard;
+            }
             foreach (string header in httpWebResponse.Headers.AllKeys)
             {
                 if (header.StartsWith(BceConstants.HttpHeaders.BceUserMetadataPrefix))
@@ -1504,6 +1539,10 @@ namespace BaiduBce.Services.Bos
             {
                 request.Headers[BceConstants.HttpHeaders.ETag] = metadata.ETag;
             }
+            if (metadata.StorageClass != null)
+            {
+                request.Headers[BceConstants.HttpHeaders.BceStorageClass] = metadata.StorageClass;
+            }
 
             IDictionary<string, string> userMetadata = metadata.UserMetadata;
             if (userMetadata != null)
@@ -1539,7 +1578,7 @@ namespace BaiduBce.Services.Bos
             {
                 key = (request as ObjectRequestBase).Key;
             }
-            return CreateInternalRequest(request.Config, httpMethod, new string[] { UrlPrefix, bucketName, key });         
+            return CreateInternalRequest(request, httpMethod, new string[] { UrlPrefix, bucketName, key });         
         }
 
         private InternalRequest CreateInternalRequestForGetObject(GetObjectRequest request)

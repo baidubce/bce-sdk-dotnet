@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -33,8 +33,9 @@ namespace BaiduBce.UnitTest.Services.Sts
             public void TestInitialize()
             {
                 this.config = new BceClientConfiguration();
-                this.config.Credentials = new DefaultBceCredentials(this.ak, this.sk);
-                this.config.Endpoint = this.endpoint;
+                this.config.Credentials =
+                    new DefaultBceCredentials("d154df3e2ac44e53b566db53ec644a7e", "2e8445d62bc84011991b4306b91f19f8");
+                this.config.Endpoint = "http://10.107.37.40:8586";
                 this.client = new StsClient(this.config);
             }
 
@@ -98,7 +99,7 @@ namespace BaiduBce.UnitTest.Services.Sts
             }
 
             [TestMethod]
-            [ExpectedException(typeof(BceServiceException))]
+            [ExpectBceServiceException(400, "InvalidRequest")]
             public void TestEmptyAcl()
             {
                 var getSessionTokenResponse =
@@ -106,11 +107,23 @@ namespace BaiduBce.UnitTest.Services.Sts
             }
 
             [TestMethod]
-            [ExpectedException(typeof(BceServiceException))]
+            [ExpectBceServiceException(400, "InvalidRequestBody")]
             public void TestInvalidAcl()
             {
                 var getSessionTokenResponse =
                     this.client.GetSessionToken(new GetSessionTokenRequest() { AccessControlList = "{" });
+            }
+
+            [TestMethod]
+            [ExpectBceServiceException(400, "InvalidRequest", "not support temporal credential")]
+            public void TestTemporaryCredentials()
+            {
+                var getSessionTokenResponse = this.client.GetSessionToken();
+                var tempCredentials = new DefaultBceSessionCredentials(
+                    getSessionTokenResponse.AccessKeyId,
+                    getSessionTokenResponse.SecretAccessKey,
+                    getSessionTokenResponse.SessionToken);
+                this.client.GetSessionToken(new GetSessionTokenRequest() { Credentials = tempCredentials });
             }
         }
     }

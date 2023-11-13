@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+﻿// Copyright 2014 Baidu, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
@@ -19,6 +19,12 @@ namespace BaiduBce.Model
     /// </summary>
     public class BceRequestBase
     {
+        /// <summary>
+        /// The credentials to use for this request. If this property is set, the credentials provided in config will be
+        /// ingored.
+        /// </summary>
+        public IBceCredentials Credentials { get; set; }
+
         /// <summary>
         /// The optional config to use for this request - overrides the default config set at the client level.
         /// </summary>
