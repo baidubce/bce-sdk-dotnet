@@ -11,6 +11,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using BaiduBce.Http;
@@ -80,6 +81,10 @@ namespace BaiduBce
         {
             if (config.Endpoint != null)
             {
+                if (!config.Endpoint.Contains("://"))
+                {
+                    return "http://" + config.Endpoint;
+                }
                 return config.Endpoint;
             }
             string protocol = config.Protocol ?? BceConstants.Protocol.Http;

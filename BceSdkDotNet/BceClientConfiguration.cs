@@ -102,6 +102,10 @@ namespace BaiduBce
         /// The retry policy for failed requests.
         /// </summary>
         public IRetryPolicy RetryPolicy { get; set; }
+        
+        public bool? CnameEnabled { get; set; }
+
+        public bool? PathStyleEnabled { get; set; }
 
         public string UserAgent
         {
@@ -164,6 +168,8 @@ namespace BaiduBce
             this.Signer = other.Signer;
             this.SignOptions = other.SignOptions;
             this.RetryPolicy = other.RetryPolicy;
+            this.CnameEnabled = other.CnameEnabled;
+            this.PathStyleEnabled = other.PathStyleEnabled;
         }
 
         public BceClientConfiguration Merge(BceClientConfiguration other)
@@ -237,6 +243,14 @@ namespace BaiduBce
             {
                 ret.RetryPolicy = other.RetryPolicy;
             }
+            if (other.CnameEnabled.HasValue)
+            {
+                ret.CnameEnabled = other.CnameEnabled;
+            }
+            if (other.PathStyleEnabled.HasValue)
+            {
+                ret.PathStyleEnabled = other.PathStyleEnabled;
+            }
             return ret;
         }
 
@@ -251,6 +265,8 @@ namespace BaiduBce
             config.MaxIdleTimeInMillis = BceClientConfiguration.DefaultMaxIdleTimeInMillis;
             config.ConnectionLimit = BceClientConfiguration.DefaultConnectionLimit;
             config.SocketBufferSizeInBytes = BceClientConfiguration.DefaultSocketBufferSizeInBytes;
+            config.CnameEnabled = false;
+            config.PathStyleEnabled = false;
             config.Signer = new BceV1Signer();
             config.SignOptions = new SignOptions();
             config.RetryPolicy = new DefaultRetryPolicy();

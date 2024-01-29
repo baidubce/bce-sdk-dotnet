@@ -20,6 +20,11 @@ namespace BaiduBce.Services.Bos.Model
 
         private string _key;
 
+        /// <summary>
+        /// Limit the read and write rate of object
+        /// </summary>
+        private long _trafficLimit;
+        
         public string Key
         {
             get { return _key; }
@@ -34,6 +39,22 @@ namespace BaiduBce.Services.Bos.Model
                     throw new ArgumentException("objectKey should not be greater than " + MaxObjectKeyLength + ".");
                 }
                 _key = value;
+            }
+        }
+
+        public long TrafficLimit
+        {
+            get { return _trafficLimit; }
+            set
+            {
+                if (value == 0 || (value >= 819200 && value <= 838860800))
+                {
+                    _trafficLimit = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException("Traffic limit must be between 819200(bit/s) and 838860800(bit/s).");
+                }
             }
         }
     }

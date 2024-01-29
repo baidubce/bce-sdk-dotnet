@@ -95,6 +95,8 @@ namespace BaiduBce
 
             public const string BosDebugId = "x-bce-debug-id";
 
+            public const string BosTrafficLimit = "x-bce-traffic-limit";
+
             #endregion
         }
 
@@ -264,6 +266,7 @@ namespace BaiduBce
             public const string PreconditionFailed = "PreconditionFailed";
             public const string RequestExpired = "RequestExpired";
             public const string SignatureDoesNotMatch = "SignatureDoesNotMatch";
+            public const string Http400 = "Http400";
         }
     }
 }

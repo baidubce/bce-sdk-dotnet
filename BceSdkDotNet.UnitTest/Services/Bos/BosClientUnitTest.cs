@@ -12,6 +12,7 @@
 using System;
 using System.Net;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -558,6 +559,265 @@ namespace BaiduBce.UnitTest.Services.Bos
                 uploads = this.client.ListMultipartUploads(this.bucketName).Uploads;
                 Assert.AreEqual(uploads.Count, 0);
             }
+        }
+        
+        // Before performing the following test
+        // 1.you need to create a bucket by yourself
+        // 2.Apply for a domain name and register it
+        // 3.Bind domain name to bucket
+        [TestClass]
+        public class CnameDomainTest : Base
+        {
+            [TestMethod]
+            public void TestCnameHost()
+            {
+                string path = "put_object_cname_enabled.txt";
+                File.WriteAllText(path, "data");
+                FileInfo fileInfo = new FileInfo(path);
+                string key = "test_cname_host.txt";
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo
+                };
+                BceClientConfiguration cfg = new BceClientConfiguration();
+                cfg.Endpoint = "http://22.y001122.online";
+                cfg.CnameEnabled = false;
+                request.Config = cfg;
+                PutObjectResponse response = client.PutObject(request);
+                Assert.AreEqual(response.ETAG, HashUtils.ComputeMD5Hash(fileInfo));
+            }
+            
+            [TestMethod]
+            public void TestCnameLikeHost()
+            {
+                string path = "put_object_cname_disabled.txt";
+                File.WriteAllText(path, "data");
+                FileInfo fileInfo = new FileInfo(path);
+                string key = "test_cname_like_host.txt";
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo
+                };
+                BceClientConfiguration cfg = new BceClientConfiguration();
+                cfg.Endpoint = "http://test-cname.cdn.bcebos.com";
+                cfg.CnameEnabled = false;
+                request.Config = cfg;
+                PutObjectResponse response = client.PutObject(request);
+                Assert.AreEqual(response.ETAG, HashUtils.ComputeMD5Hash(fileInfo));
+            }
+        
+            [TestMethod]
+            public void TestCustomHost()
+            {
+                string path = "put_object_cname_disabled.txt";
+                File.WriteAllText(path, "data");
+                FileInfo fileInfo = new FileInfo(path);
+                string key = "test_custom_host.txt";
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo
+                };
+                BceClientConfiguration cfg = new BceClientConfiguration();
+                cfg.Endpoint = "http://test-cname.bj.bcebos.com";
+                cfg.CnameEnabled = false;
+                request.Config = cfg;
+                request.BucketName = "test-cname";
+                PutObjectResponse response = client.PutObject(request);
+                Assert.AreEqual(response.ETAG, HashUtils.ComputeMD5Hash(fileInfo));
+            }
+        }
+
+        [TestClass]
+        public class TrafficLimitTest : Base
+        {
+            static void GenerateFile(string filePath, long fileSizeInBytes)
+            {
+                using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                {
+                    fs.SetLength(fileSizeInBytes);
+                }
+            }
+            
+            [TestMethod]
+            public void TestPutObjectTrafficLimit()
+            {
+                long fileSizeInBytes = 10 * 1024 * 1024;
+                string filePath = "test_file_10M.txt";
+                GenerateFile(filePath, fileSizeInBytes);
+                FileInfo fileInfo = new FileInfo(filePath);
+                
+                string key = "test_traffic_limit.txt";
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo
+                };
+                BceClientConfiguration cfg = new BceClientConfiguration();
+                request.Config = cfg;
+                request.TrafficLimit = 819200;
+                
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                PutObjectResponse response = client.PutObject(request);
+                stopwatch.Stop();
+                
+                Console.WriteLine("Time taken: " + stopwatch.Elapsed);
+                // Assert.IsTrue(stopwatch.Elapsed.Seconds >= 10);
+                // Assert.AreEqual(response.ETAG, HashUtils.ComputeMD5Hash(fileInfo));
+            }
+
+            [TestMethod]
+            public void TestGetObjectTrafficLimit()
+            {
+                long fileSizeInBytes = 10 * 1024 * 1024;
+                string filePath = "test_file_10M.txt";
+                GenerateFile(filePath, fileSizeInBytes);
+                FileInfo fileInfo = new FileInfo(filePath);
+                
+                string key = "test_traffic_limit.txt";
+                PutObjectRequest putRequest = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = fileInfo
+                };
+                BceClientConfiguration putCfg = new BceClientConfiguration();
+                putRequest.Config = putCfg;
+                PutObjectResponse response = client.PutObject(putRequest);
+                string etag = response.ETAG;
+                
+                GetObjectRequest getRequest = new GetObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                };
+                BceClientConfiguration getCfg = new BceClientConfiguration();
+                getRequest.Config = getCfg;
+                getRequest.TrafficLimit = 819200;
+                
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                BosObject bosObject = client.GetObject(getRequest);
+                filePath = "test_file_10M_new.txt";
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    bosObject.ObjectContent.CopyTo(fileStream);
+                }
+                stopwatch.Stop();
+                
+                Console.WriteLine("Time taken: " + stopwatch.Elapsed);
+                
+                // Assert.IsTrue(stopwatch.Elapsed.Seconds >= 10);
+                // Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+            }
+        }
+
+        [TestClass]
+        public class VirtualHostedTest : Base
+        {
+            private string etag = "";
+            
+            [TestInitialize()]
+            public void VirtualHostedTestInitialize()
+            {
+                string filePath = "test.txt";
+                long fileSizeInBytes = 1024;
+                string key = "test.txt";
+                
+                using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                {
+                    fs.SetLength(fileSizeInBytes);
+                }
+                PutObjectRequest request = new PutObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                    FileInfo = new FileInfo(filePath)
+                };
+                request.Config = new BceClientConfiguration();
+                PutObjectResponse response = client.PutObject(request);
+                etag = response.ETAG;
+            }
+            
+            [TestMethod]
+            public void TestPathStyleEnable()
+            {
+                string key = "test.txt";
+                GetObjectRequest request = new GetObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                };
+                request.Config =  new BceClientConfiguration();
+                request.Config.PathStyleEnabled = true;
+                request.Config.Endpoint = "http://bj.bcebos.com";
+                BosObject bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+                
+                request.Config.Endpoint = "https://bj.bcebos.com";
+                bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+
+                request.Config.Endpoint = "bj.bcebos.com";
+                bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+                
+                request.Config.Endpoint = string.Format("http://{0}.bj.bcebos.com", bucketName);
+                bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+                
+                request.Config.Endpoint = string.Format("https://{0}.bj.bcebos.com", bucketName);
+                bosObject = client.GetObject(request);     
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+                
+                request.Config.Endpoint = string.Format("{0}.bj.bcebos.com", bucketName);
+                bosObject = client.GetObject(request);     
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+            }
+            
+            [TestMethod]
+            public void TestPathStylDisable()
+            {
+                string key = "test.txt";
+                GetObjectRequest request = new GetObjectRequest()
+                {
+                    BucketName = this.bucketName,
+                    Key = key,
+                };
+                request.Config =  new BceClientConfiguration();
+                request.Config.PathStyleEnabled = false;
+                request.Config.Endpoint = "http://bj.bcebos.com";
+                BosObject bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+                
+                request.Config.Endpoint = "https://bj.bcebos.com";
+                bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+ 
+                request.Config.Endpoint = "bj.bcebos.com";
+                bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+                
+                request.Config.Endpoint = string.Format("http://{0}.bj.bcebos.com", bucketName);
+                bosObject = client.GetObject(request);
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);
+                
+                request.Config.Endpoint = string.Format("https://{0}.bj.bcebos.com", bucketName);
+                bosObject = client.GetObject(request);     
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag);                
+                
+                request.Config.Endpoint = string.Format("{0}.bj.bcebos.com", bucketName);
+                bosObject = client.GetObject(request);     
+                Assert.AreEqual(etag, bosObject.ObjectMetadata.ETag); 
+            }
+            
         }
     }
 }

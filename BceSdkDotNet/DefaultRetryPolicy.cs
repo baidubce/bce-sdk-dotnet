@@ -173,6 +173,11 @@ namespace BaiduBce
                     return true;
                 }
 
+                if (bse.StatusCode == BceConstants.HttpStatusCode.BadRequest && bse.ErrorCode == BceConstants.BceErrorCode.Http400) {
+                    log.Debug("Retry for bad request.");
+                    return true;
+                }
+
                 string errorCode = bse.ErrorCode;
                 if (errorCode == BceConstants.BceErrorCode.RequestExpired)
                 {

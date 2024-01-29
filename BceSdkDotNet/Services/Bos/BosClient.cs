@@ -805,6 +805,10 @@ namespace BaiduBce.Services.Bos
             if (!String.IsNullOrEmpty(metadata.StorageClass)) {
                 internalRequest.Headers[BceConstants.HttpHeaders.BceStorageClass] = metadata.StorageClass;
             }
+            if (request.TrafficLimit != 0)
+            {
+                internalRequest.Headers[BceConstants.HttpHeaders.BosTrafficLimit] = request.TrafficLimit.ToString();
+            }
 
             using (internalRequest.Content)
             {
@@ -896,7 +900,6 @@ namespace BaiduBce.Services.Bos
             CheckNotNull(request, "request should not be null.");
 
             InternalRequest internalRequest = CreateInternalRequestForGetObject(request);
-
             return internalRequest.Config.RetryPolicy.Execute<BosObject>(attempt =>
             {
                 var httpWebResponse = this.httpClient.Execute(internalRequest);
@@ -1578,6 +1581,28 @@ namespace BaiduBce.Services.Bos
             {
                 key = (request as ObjectRequestBase).Key;
             }
+
+            if (request.Config != null && request.Config.Endpoint != null)
+            {
+                var endpoint = request.Config.Endpoint;
+                // http(s)://example.com http:(s)//xxx.cdn.bcebos.com
+                // http(s)://{bucket}.{region}.bcebos.com 
+                if (request.Config.CnameEnabled == true || DomainUtils.IsCnameLikeHost(endpoint) || DomainUtils.IsCustomHost(endpoint,bucketName))
+                {
+                    return CreateInternalRequest(request, httpMethod, new string[] { UrlPrefix, key });         
+                }
+                // http(s)://{region}.bcebos.com --> http(s)://{bucket}.{region}.bcebos.com
+                if (request.Config.PathStyleEnabled == false)
+                {
+                    string newEndpoint = DomainUtils.ConvertEndpointToVirtualHostedStyle(endpoint, bucketName);
+                    if (newEndpoint != request.Config.Endpoint)
+                    {
+                        request.Config.Endpoint = newEndpoint;
+                        return CreateInternalRequest(request, httpMethod, new string[] { UrlPrefix, key });
+                    }
+                }
+            }
+            
             return CreateInternalRequest(request, httpMethod, new string[] { UrlPrefix, bucketName, key });         
         }
 
@@ -1589,6 +1614,10 @@ namespace BaiduBce.Services.Bos
             {
                 internalRequest.Range = request.Range;
                 //internalRequest.Headers[BceConstants.HttpHeaders.Range] = "bytes=" + range[0] + "-" + range[1];
+            }
+            if (request.TrafficLimit != 0)
+            {
+                internalRequest.Headers[BceConstants.HttpHeaders.BosTrafficLimit] = request.TrafficLimit.ToString();
             }
             return internalRequest;
         }
